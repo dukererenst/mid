@@ -1,0 +1,67 @@
+<h:panelGroup 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="jakarta.faces.facelets"
+    xmlns:h="jakarta.faces.html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="jakarta.faces.core">
+    
+        
+
+    <div class="grid ui-fluid">
+        <div class="col-12 md:col-6">
+            <p:outputLabel for="productName" value="Product Name"/>
+            <p:inputText id="productName" value="#{productController.product.productName}" required="true"/>
+        </div>
+
+        <div class="col-12 md:col-6">
+            <p:outputLabel for="productCode" value="Product Code"/>
+            <p:inputText id="productCode" value="#{productController.product.productCode}" required="true"/>
+        </div>
+
+        <div class="col-12 md:col-6">
+            <p:outputLabel for="productType" value="Product Type"/>
+            <p:selectOneMenu id="productType" value="#{productController.product.productType}" converter="omnifaces.SelectItemsConverter">
+                <f:selectItem itemLabel="Select Type" itemValue="#{null}"/>
+                <f:selectItems value="#{commonOption.productTypeList()}" var="type" itemLabel="#{type.productTypeName}" itemValue="#{type}"/>
+            </p:selectOneMenu>
+        </div>
+
+        <div class="col-12 md:col-6">
+            <p:outputLabel for="company" value="Company"/>
+            <p:selectOneMenu id="company" value="#{productController.product.companyInformation}" converter="omnifaces.SelectItemsConverter">
+                <f:selectItem itemLabel="Select Company" itemValue="#{null}"/>
+                <f:selectItems value="#{commonOption.insuranceCompanysList()}" var="c" itemLabel="#{c.companyName}" itemValue="#{c}"/>
+            </p:selectOneMenu>
+        </div>
+
+        <div class="col-12 md:col-6">
+            <p:outputLabel for="risk" value="Risk Category"/>
+            <p:selectOneMenu id="risk" value="#{productController.product.riskCategory}" converter="omnifaces.SelectItemsConverter">
+                <f:selectItem itemLabel="Select Risk" itemValue="#{null}"/>
+                <f:selectItems value="#{commonOption.riskCategoryList()}" var="r" itemLabel="#{r.categoryName}" itemValue="#{r}"/>
+            </p:selectOneMenu>
+        </div>
+
+        <div class="col-12 md:col-6">
+            <p:outputLabel for="premiumPriceType" value="Premium Price Type"/>
+            <p:selectOneMenu id="premiumPriceType" value="#{productController.product.premiumPriceType}">
+                <f:selectItems value="#{commonOption.priceType()}" var="pt" itemLabel="#{pt}" itemValue="#{pt}"/>
+            </p:selectOneMenu>
+        </div>
+
+        <div class="col-12 md:col-6">
+            <p:outputLabel for="premiumValue" value="Premium Value"/>
+            <p:inputNumber id="premiumValue" value="#{productController.product.premiumValue}" decimalPlaces="2"/>
+        </div>
+
+        <div class="col-12 md:col-6">
+            <p:outputLabel for="active" value="Active"/>
+            <p:selectBooleanCheckbox id="active" value="#{productController.product.active}"/>
+        </div>
+
+        <div class="col-12 md:col-6">
+            <p:outputLabel for="description" value="Description"/>
+            <p:inputTextarea id="description" value="#{productController.product.description}" rows="3"/>
+        </div>
+    </div>
+</h:panelGroup>

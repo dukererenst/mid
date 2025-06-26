@@ -1,0 +1,109 @@
+<ui:composition template="/WEB-INF/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">Cover Type Management</ui:define>
+    <ui:define name="content">
+
+        <div class="card">
+            <h5>Cover Type Information</h5>
+            <hr/>
+            <div class="grid">
+                <div class="col-6 md:col-6">
+
+                    <h:form id="coverTypeForm">
+                        <p:growl/>
+                        <div class="formgrid grid ui-fluid">
+                            <div class="col-12 md:col-6">
+                                <div class="field">
+                                    <p:outputLabel for="cName">Cover Type Name</p:outputLabel>
+                                    <p:inputText id="cName" type="text" value="#{coverTypeController.coverType.coverName}" required="true" requiredMessage="Required"/>
+                                </div> 
+
+                            </div>  
+                            <div class="col-12 md:col-6">
+                                <div class="field">
+                                    <p:outputLabel for="gname">Cover Type Code</p:outputLabel>
+                                    <p:inputText id="gname" type="text" value="#{coverTypeController.coverType.coverCode}" required="true" requiredMessage="Required"/>
+                                </div>      
+
+                            </div> 
+                            <div class="col-12 md:col-6">
+                                <div class="field">
+                                    <p:outputLabel for="description">Description</p:outputLabel>
+                                    <p:inputTextarea id="description" value="#{coverTypeController.coverType.description}" required="true" requiredMessage="Required"/>
+                                </div>      
+
+                            </div> 
+                            <div class="col-12 md:col-6">
+                                <div class="field">
+                                    <p:outputLabel for="active">Active</p:outputLabel>
+                                    <p:selectBooleanCheckbox id="active" label="Active" value="#{coverTypeController.coverType.active}" required="true" requiredMessage="Required"/>
+                                </div>      
+
+                            </div> 
+
+
+
+
+                        </div>
+
+                        <p:commandButton value="Submit" styleClass="mr-2 mb-2" action="#{coverTypeController.saveMethod()}" ajax="false"/>
+                        <p:commandButton value="Clear" styleClass="ui-button-danger" action="#{coverTypeController.clearMethod()}" ajax="false" immediate="true"/>
+
+                    </h:form>
+
+                </div>
+                <div class="col-6 md:col-6">
+
+                    <h5>Cover Type List</h5>
+
+                    <h:form id="coverTypeList">
+                        <p:growl id="deleted"/>
+                        <p:dataTable widgetVar="sectorDT" value="#{coverTypeController.coverTypesList}" var="cate" paginator="true" rows="10" reflow="true" 
+                                     paginatorPosition="bottom" 
+                                     selection="#{coverTypeController.coverType}" rowKey="#{cate.id}" selectionMode="single">
+
+                            <p:column headerText="Cover Type Name"  >
+                                <h:outputLabel value="#{cate.coverName}"/>
+                            </p:column>
+                            <p:column headerText="Cover Type Code">
+                                <h:outputLabel value="#{cate.coverCode}"/>
+                            </p:column>
+                            <p:column headerText="Active">
+                                <span class="px-2 py-1 border-round text-white"
+                                      style="background:#{cate.active ? 'green' : 'red'}">
+                                    #{cate.active ? 'Active' : 'Inactive'}
+                                </span>
+                            </p:column>
+                            <p:column headerText="Action">
+                                <p:commandButton value="Edit" icon="pi pi-pencil" action="#{coverTypeController.editMethod(cate)}" ajax="false"/>  |
+                                <p:commandButton value="Del" icon="pi pi-trash" styleClass="ui-button-danger"
+                                                 oncomplete="PF('dlg').show()"
+                                                 actionListener="#{coverTypeController.setCoverTypeToDelete(cate)}" 
+                                                 process="@this"/>
+
+                            </p:column>
+
+                        </p:dataTable>
+
+                        <p:confirmDialog message="Are you sure you want to delete?" header="Confirmation" id="dlg" widgetVar="dlg">
+                            <p:commandButton value="Yes"
+                                             action="#{coverTypeController.deleteMethod(coverTypeController.coverTypeToDelete)}"
+                                             update="coverTypeList deleted"
+                                             oncomplete="PF('dlg').hide()" />
+                            <p:commandButton value="No"
+                                             onclick="PF('dlg').hide()"
+                                             type="button" />
+                        </p:confirmDialog>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+
+
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,177 @@
+<ui:composition template="/WEB-INF/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">Individual Customer Management</ui:define>
+
+    <ui:define name="content">
+        <div class="card">
+            <h5>Individual Customer Information</h5>
+            <hr/>
+            <div class="grid">
+                <div class="col-12 md:col-12">
+                    <h:form id="customerTableForm" prependId="false">
+                        <p:growl id="msgs" showDetail="true" life="5000" />
+
+                        <div class="flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                            <div class="flex align-items-center gap-2">
+                                <p:commandButton value="New Customer" icon="pi pi-plus"
+                                                 styleClass="ui-button-success"
+                                                 action="#{individufalCustomerController.prepareNewCustomer}"
+                                                 update=":customerDialogForm"
+                                                 oncomplete="PF('customerDialog').show()" />
+
+                                <p:commandButton value="Reset Filters" icon="pi pi-filter-slash"
+                                                 styleClass="ui-button-secondary"
+                                                 onclick="PF('customerTable').clearFilters(); return false;" />
+                            </div>
+
+                            <div class="p-input-icon-left w-100 md:w-30rem">
+                                <i class="pi pi-search"/>
+                                <p:inputText id="globalFilter"
+                                             onkeyup="PF('customerTable').filter()"
+                                             placeholder="Search customers..." styleClass="w-full" />
+                            </div>
+                        </div>
+
+
+
+                        <!-- Customer Table -->
+                        <p:dataTable id="customerTable"
+                                     var="customer"
+                                     lazy="true"
+                                     value="#{individualCustomerController.lazyCustomers}"
+                                     rowKey="#{customer.id}"
+                                     widgetVar="customerTable"
+                                     paginator="true"
+                                     rows="10"
+                                     emptyMessage="No customers found."
+                                     filteredValue="#{individualCustomerController.filteredCustomers}"
+                                     globalFilter="#{globalFilter}">
+
+                            <p:column headerText="First Name" filterBy="#{customer.firstName}" filterMatchMode="contains">
+                                #{customer.firstName}
+                            </p:column>
+                            <p:column headerText="Last Name" filterBy="#{customer.lastName}" filterMatchMode="contains">
+                                #{customer.lastName}
+                            </p:column>
+                            <p:column headerText="Email" filterBy="#{customer.emailAddress}" filterMatchMode="contains">
+                                #{customer.emailAddress}
+                            </p:column>
+                            <p:column headerText="Primary Phone" filterBy="#{customer.primaryTelephone}">
+                                #{customer.primaryTelephone}
+                            </p:column>
+                            <p:column headerText="Status">
+                                <p:tag value="#{customer.status ? 'Active' : 'Inactive'}"
+                                       severity="#{customer.status ? 'success' : 'danger'}"/>
+                            </p:column>
+                            <p:column headerText="Actions">
+                                <p:commandButton icon="pi pi-pencil" title="Edit"
+                                                 actionListener="#{individualCustomerController.editMethod(customer)}"
+                                                 update=":customerDialogForm"
+                                                 oncomplete="PF('customerDialog').show()" />
+                                <p:commandButton icon="pi pi-trash" title="Delete"
+                                                 actionListener="#{individualCustomerController.deleteMethod(customer)}"
+                                                 update="@form"
+                                                 process="@this"
+                                                 onclick="return confirm('Are you sure you want to delete this customer?');" />
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+
+                    <!-- Customer Dialog -->
+                    <p:dialog header="Individual Customer Details"
+                              widgetVar="customerDialog"
+                              modal="true"
+                              width="80vw"
+                              appendTo="@(body)"
+                              resizable="false"
+                              closable="true">
+                        <h:form id="customerDialogForm">
+                            <div class="grid ui-fluid">
+
+                                <div class="col-12 md:col-6">
+                                    <h:outputLabel for="firstName" value="First Name:" />
+                                    <p:inputText id="firstName" value="#{individualCustomerController.individualCustomer.firstName}" required="true" />
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <h:outputLabel for="lastName" value="Last Name:" />
+                                    <p:inputText id="lastName" value="#{individualCustomerController.individualCustomer.lastName}" required="true" />
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <h:outputLabel for="email" value="Email:" />
+                                    <p:inputText id="email" value="#{individualCustomerController.individualCustomer.emailAddress}" required="true" />
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <h:outputLabel for="primaryPhone" value="Primary Phone:" />
+                                    <p:inputText id="primaryPhone" value="#{individualCustomerController.individualCustomer.primaryTelephone}" required="true" />
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <h:outputLabel for="secondaryPhone" value="Secondary Phone:" />
+                                    <p:inputText id="secondaryPhone" value="#{individualCustomerController.individualCustomer.secondaryTelephone}" />
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <h:outputLabel for="dob" value="Date of Birth:" />
+                                    <p:datePicker id="dob" value="#{individualCustomerController.individualCustomer.dateOfBirth}" pattern="yyyy-MM-dd" />
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <h:outputLabel for="gender" value="Gender:" />
+                                    <p:selectOneMenu id="gender" value="#{individualCustomerController.individualCustomer.sex}">
+                                        <f:selectItem itemLabel="Select Gender" itemValue="" />
+                                        <f:selectItems value="#{commonOption.genders}" var="g"
+                                                       itemLabel="#{g}" itemValue="#{g}" />
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <h:outputLabel for="nationality" value="Nationality:" />
+                                    <p:inputText id="nationality" value="#{individualCustomerController.individualCustomer.nationality}" />
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <h:outputLabel for="occupation" value="Occupation:" />
+                                    <p:inputText id="occupation" value="#{individualCustomerController.individualCustomer.occupation}" />
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <h:outputLabel for="education" value="Level of Education:" />
+                                    <p:inputText id="education" value="#{individualCustomerController.individualCustomer.levelOfEducation}" />
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <h:outputLabel for="gpsCode" value="GPS Code:" />
+                                    <p:inputText id="gpsCode" value="#{individualCustomerController.individualCustomer.gpsCode}" />
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <h:outputLabel for="residentialAddress" value="Residential Address:" />
+                                    <p:inputTextarea id="residentialAddress" value="#{individualCustomerController.individualCustomer.residentialAddress}" rows="3" autoResize="true" />
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <h:outputLabel for="status" value="Status:" />
+                                    <p:selectBooleanCheckbox id="status" value="#{individualCustomerController.individualCustomer.status}" />
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <h:outputLabel for="active" value="Active:" />
+                                    <p:selectBooleanCheckbox id="active" value="#{individualCustomerController.individualCustomer.active}" />
+                                </div>
+                            </div>
+
+                            <p:separator />
+
+                            <p:commandButton value="Save"
+                                             icon="pi pi-save"
+                                             actionListener="#{individualCustomerController.saveMethod()}"
+                                             update=":customerTableForm :msgs"
+                                             oncomplete="PF('customerDialog').hide()" />
+                            <p:commandButton value="Cancel"
+                                             icon="pi pi-times"
+                                             actionListener="#{individualCustomerController.clearMethod()}"
+                                             type="button"
+                                             onclick="PF('customerDialog').hide()" />
+                        </h:form>
+                    </p:dialog>
+
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

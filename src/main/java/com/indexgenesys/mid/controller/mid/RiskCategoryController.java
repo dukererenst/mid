@@ -21,7 +21,10 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortMeta;
 
 /**
  *
@@ -54,7 +57,22 @@ public class RiskCategoryController implements Serializable, MidMethods {
 
     @PostConstruct
     public void init() {
-        findAll();
+        lazyRiskCategories = new LazyDataModel<RiskCategory>() {
+            @Override
+            public int count(Map<String, FilterMeta> map) {
+                return service.count(map);
+            }
+
+            @Override
+            public List<RiskCategory> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filters) {
+                 List<RiskCategory> page = service.fetchPaginated(first, pageSize, sortBy, filters);
+                // Tell the table how many rows match the filters
+                int count = service.count(filters);
+                this.setRowCount(count);
+                return page;
+            }
+        };
+        
     }
     
      public void prepareNew() {
@@ -64,8 +82,8 @@ public class RiskCategoryController implements Serializable, MidMethods {
 
     @Override
     public void saveMethod() {
-        idGenerator.uniqueEntityId(riskCategory);
-        if (riskCategoryFacade.save(riskCategory) != null) {
+        idGenerator.uniqueEntityId(selected);
+        if (riskCategoryFacade.save(selected) != null) {
             clearMethod();
             JSF.addSuccessMessage(Variable.saveSuccess);
         } else {
@@ -75,7 +93,7 @@ public class RiskCategoryController implements Serializable, MidMethods {
 
     @Override
     public void clearMethod() {
-        riskCategory = new RiskCategory();
+        selected = new RiskCategory();
         riskCategorysList = new ArrayList<>();
         riskCategoryToDelete = null;
         findAll();
@@ -83,7 +101,7 @@ public class RiskCategoryController implements Serializable, MidMethods {
 
     @Override
     public void editMethod(EntityModel em) {
-        riskCategory = (RiskCategory) em;
+        selected = (RiskCategory) em;
     }
 
     @Override

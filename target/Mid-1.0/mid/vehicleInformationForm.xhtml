@@ -1,0 +1,153 @@
+<h:panelGroup 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="jakarta.faces.facelets"
+    xmlns:h="jakarta.faces.html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="jakarta.faces.core">
+    
+        
+
+        <div class="formgrid grid ui-fluid">
+
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <p:outputLabel for="regNo" value="Registration Number"/>
+                    <p:inputText id="regNo" value="#{vehicleInformationController.vehicle.registrationNumber}" required="true" requiredMessage="Registration number is required"/>
+                    <p:message for="regNo"/>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <p:outputLabel for="chassis" value="Chassis Number"/>
+                    <p:inputText id="chassis" value="#{vehicleInformationController.vehicle.chassisNumber}" required="true" requiredMessage="Chassis number is required"/>
+                    <p:message for="chassis"/>
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <p:outputLabel for="make" value="Vehicle Make"/>
+                    <p:selectOneMenu id="make" value="#{vehicleInformationController.vehicle.vehicleMake}" 
+                                     required="true"
+                                     requiredMessage="Vehicle Make is required">
+                        <p:ajax event="valueChange"
+                                listener="#{vehicleInformationController.onMakeChange()}"
+                                update="model"
+                                process="@this"/>
+                         <f:selectItem itemLabel="Select Make" itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems value="#{commonOption.vehicleMakeList()}" var="make" itemValue="#{make}" itemLabel="#{make.vehicleMakeName}"/>
+
+                    </p:selectOneMenu>
+                    <p:message for="make"/>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <p:outputLabel for="model" value="Vehicle Model"/>
+                    <p:selectOneMenu id="model" value="#{vehicleInformationController.vehicle.vehicleModel}" styleClass="w-full" appendTo="@(body)"
+                                     required="true" 
+                                     requiredMessage="Vehicle Model is required">
+                        <f:selectItem itemLabel="Select Model" itemValue="#{null}" noSelectionOption="true"/>
+
+                        <f:selectItems value="#{vehicleInformationController.filteredModels}" var="model" itemValue="#{model}" itemLabel="#{model.vehicleModelName}"/>
+                    </p:selectOneMenu>
+                    <p:message for="model"/>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <p:outputLabel for="year" value="Year of Manufacture"/>
+                    <p:inputText id="year" value="#{vehicleInformationController.vehicle.yearOfManufacture}" required="true" requiredMessage="Year is required"/>
+                    <p:message for="year"/>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <p:outputLabel for="color" value="Color"/>
+                    <p:inputText id="color" value="#{vehicleInformationController.vehicle.color}"/>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <p:outputLabel for="type" value="Vehicle Type"/>
+                    <p:selectOneMenu id="type" value="#{vehicleInformationController.vehicle.vehicleType}" >
+                        <f:selectItems value="#{commonOption.vehicleTypeList()}" var="type" itemValue="#{type}" itemLabel="#{type.vehicleTypeName}"/>
+                    </p:selectOneMenu>
+                    <p:message for="type"/>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <p:outputLabel for="bodyType" value="Vehicle Body Type"/>
+                    <p:selectOneMenu id="bodyType" value="#{vehicleInformationController.vehicle.vehicleBodyType}">
+                        <f:selectItems value="#{commonOption.vehicleBodyTypeList()}" var="body" itemValue="#{body}" itemLabel="#{body.vehicleBodyTypeName}"/>
+                    </p:selectOneMenu>
+                    <p:message for="bodyType"/>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <p:outputLabel for="engineNo" value="Engine Number"/>
+                    <p:inputText id="engineNo" value="#{vehicleInformationController.vehicle.engineNumber}"/>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <p:outputLabel for="capacity" value="Engine Capacity"/>
+                    <p:inputText id="capacity" value="#{vehicleInformationController.vehicle.engineCapacity}"/>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <p:outputLabel for="seats" value="Number of Seats"/>
+                    <p:inputText id="seats" value="#{vehicleInformationController.vehicle.numberOfSeats}"/>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <p:outputLabel for="value" value="Vehicle Value"/>
+                    <p:inputText id="value" value="#{vehicleInformationController.vehicle.vehicleValue}" required="true" requiredMessage="Vehicle value is required"/>
+                    <p:message for="value"/>
+                </div>
+            </div>
+
+
+
+           
+
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <p:outputLabel for="purpose" value="Purpose of Use"/>
+                    <p:inputText id="purpose" value="#{vehicleInformationController.vehicle.purposeOfUse}"/>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <p:outputLabel for="usage" value="Vehicle Usage Type"/>
+                    <p:selectOneMenu id="usage" value="#{vehicleInformationController.vehicle.vehicleUsageType}">
+                        <f:selectItem itemLabel="Select Usage Type" itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems value="#{commonOption.vehicleUsageType()}" var="u" itemValue="#{u}" itemLabel="#{u.label}"/>
+                    </p:selectOneMenu>
+                </div>
+            </div>
+            
+             <div class="col-12 md:col-6">
+                <div class="field">
+                    <p:outputLabel for="commercial" value="Commercial?"/>
+                    <p:selectBooleanCheckbox id="commercial" value="#{vehicleInformationController.vehicle.isCommercial}"/>
+                </div>
+            </div>
+        </div>
+
+      
+</h:panelGroup>

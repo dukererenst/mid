@@ -8,8 +8,6 @@ package com.indexgenesys.mid.service;
  *
  * @author ernest
  */
-
-
 import com.indexgenesys.mid.entity.mid.RiskCategory;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -29,52 +27,54 @@ public class RiskCategoryServiceBean implements RiskCategoryService {
     @PersistenceContext
     private EntityManager em;
 
-   @Override
-public List<RiskCategory> fetchPaginated(int first,
-                                         int pageSize,
-                                         Map<String, SortMeta> sortBy,
-                                         Map<String, FilterMeta> filters) {
+    @Override
+    public List<RiskCategory> fetchPaginated(int first,
+            int pageSize,
+            Map<String, SortMeta> sortBy,
+            Map<String, FilterMeta> filters) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<RiskCategory> cq = cb.createQuery(RiskCategory.class);
+        Root<RiskCategory> root = cq.from(RiskCategory.class);
 
-    CriteriaBuilder cb = em.getCriteriaBuilder();
-    CriteriaQuery<RiskCategory> cq = cb.createQuery(RiskCategory.class);
-    Root<RiskCategory> root = cq.from(RiskCategory.class);
+        List<Predicate> preds = new ArrayList<>();
 
-    // --- Filtering (unchanged) ---
-    List<Predicate> preds = new ArrayList<>();
-    for (FilterMeta fm : filters.values()) {
-        String field = fm.getField();
-        Object value = fm.getFilterValue();
-        if (value != null) {
+        // 1) handle column filters as before, but skip "globalFilter"
+        for (FilterMeta fm : filters.values()) {
+            String field = fm.getField();
+            Object val = fm.getFilterValue();
+            if (val == null) {
+                continue;
+            }
+            if ("globalFilter".equals(field)) {
+                // we'll handle this below
+                continue;
+            }
             preds.add(cb.like(
-                cb.lower(root.get(field).as(String.class)),
-                "%" + value.toString().toLowerCase() + "%"
+                    cb.lower(root.get(field).as(String.class)),
+                    "%" + val.toString().toLowerCase() + "%"
             ));
         }
-    }
-    cq.where(preds.toArray(new Predicate[0]));
 
-    // --- Sorting (updated) ---
-    List<Order> orders = new ArrayList<>();
-    for (Map.Entry<String, SortMeta> entry : sortBy.entrySet()) {
-        String field = entry.getKey();
-        SortMeta sm = entry.getValue();
-        Path<?> path = root.get(field);
-        if (sm.getOrder() == SortOrder.ASCENDING) {
-            orders.add(cb.asc(path));
-        } else if (sm.getOrder() == SortOrder.DESCENDING) {
-            orders.add(cb.desc(path));
+        // 2) now handle the globalFilter entry yourself (optional)
+        FilterMeta gf = filters.get("globalFilter");
+        if (gf != null && gf.getFilterValue() != null) {
+            String term = gf.getFilterValue().toString().toLowerCase();
+            preds.add(cb.or(
+                    cb.like(cb.lower(root.get("riskTypeName")), "%" + term + "%"),
+                    cb.like(cb.lower(root.get("riskTypeCode")), "%" + term + "%"),
+                    cb.like(cb.lower(root.get("description").as(String.class)), "%" + term + "%")
+            // … add more fields as needed
+            ));
         }
-        // Note: if sm.getOrder() == SortOrder.UNSORTED you can skip
-    }
-    if (!orders.isEmpty()) {
-        cq.orderBy(orders);
-    }
 
-    return em.createQuery(cq)
-             .setFirstResult(first)
-             .setMaxResults(pageSize)
-             .getResultList();
-}
+        cq.where(preds.toArray(new Predicate[0]));
+
+        // … your existing sorting & pagination …
+        return em.createQuery(cq)
+                .setFirstResult(first)
+                .setMaxResults(pageSize)
+                .getResultList();
+    }
 
     @Override
     public int count(Map<String, FilterMeta> filters) {
@@ -88,17 +88,17 @@ public List<RiskCategory> fetchPaginated(int first,
             Object value = fm.getFilterValue();
             if (value != null) {
                 preds.add(cb.like(
-                    cb.lower(root.get(field).as(String.class)),
-                    "%" + value.toString().toLowerCase() + "%"
+                        cb.lower(root.get(field).as(String.class)),
+                        "%" + value.toString().toLowerCase() + "%"
                 ));
             }
         }
         cq.select(cb.count(root))
-          .where(preds.toArray(new Predicate[0]));
+                .where(preds.toArray(new Predicate[0]));
 
         return em.createQuery(cq)
-                 .getSingleResult()
-                 .intValue();
+                .getSingleResult()
+                .intValue();
     }
 
     @Override
@@ -122,4 +122,3 @@ public List<RiskCategory> fetchPaginated(int first,
         em.remove(attached);
     }
 }
-
