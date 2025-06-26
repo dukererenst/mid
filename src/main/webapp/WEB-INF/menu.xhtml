@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pv="http://primefaces.org/paradise"
+    xmlns:ui="jakarta.faces.facelets"
+    xmlns:h="jakarta.faces.html">
+
+    
+    <div class="layout-menu-wrapper layout-menu-dark">
+        <div class="layout-menu-container">
+            <h:form id="menuform" prependId="false">
+                <div class="mobile-search">
+                    <i class="pi pi-fw pi-search topbar-search-icon"></i>
+                    <input type="text" class="topbar-search" placeholder="Type your search here"/>
+                </div>
+                <pv:menu widgetVar="ParadiseMenuWidget" model="#{menuBean.menuModel}"  >
+                   
+
+                </pv:menu>
+            </h:form>
+        </div>
+    </div>
+
+</ui:composition>

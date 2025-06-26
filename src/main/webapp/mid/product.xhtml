@@ -1,0 +1,114 @@
+<ui:composition template="/WEB-INF/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">Product Management</ui:define>
+
+    <ui:define name="content">
+
+        <div class="card">
+            <h5>Product Information</h5>
+            <hr/>
+            <div class="grid">
+                <div class="col-12 md:col-12">
+                    <h:form id="productTableForm" prependId="false">
+                        <p:growl id="msgs" showDetail="true" life="5000" />
+
+                        <div class="flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                            <div class="flex align-items-center gap-2">
+                                <p:commandButton value="New Product" icon="pi pi-plus"
+                                                 styleClass="ui-button-success"
+                                                 action="#{productController.prepareNewProduct()}"
+                                                 update=":productDialogForm"
+                                                 oncomplete="PF('productDialog').show()" />
+
+                                <p:commandButton value="Reset Filters" icon="pi pi-filter-slash"
+                                                 styleClass="ui-button-secondary"
+                                                 onclick="PF('productTable').clearFilters(); return false;" />
+                            </div>
+
+                            <div class="p-input-icon-left w-100 md:w-30rem">
+                                <i class="pi pi-search"/>
+                                <p:inputText id="globalFilter" onkeyup="PF('productTable').filter()"
+                                             placeholder="Search products..." styleClass="w-full" />
+                            </div>
+                        </div>
+
+                        <p:dataTable var="product"
+                                     value="#{productController.productsLazyModel}"
+                                     paginator="true" rows="10"
+                                     widgetVar="productTable"
+                                     lazy="true"
+                                     id="productTable"
+                                     paginatorPosition="bottom"
+                                     filterEvent="keyup"
+                                     emptyMessage="No products found"
+                                     filteredValue="#{productController.filteredProducts}"
+                                     globalFilter="@form:globalFilter">
+
+                            <p:column headerText="Product Name" filterBy="#{product.productName}">
+                                <h:outputText value="#{product.productName}" />
+                            </p:column>
+
+                            <p:column headerText="Code" filterBy="#{product.productCode}">
+                                <h:outputText value="#{product.productCode}" />
+                            </p:column>
+
+                            <p:column headerText="Type" filterBy="#{product.productType.productTypeName}">
+                                <h:outputText value="#{product.productType.productTypeName}" />
+                            </p:column>
+
+                            <p:column headerText="Company" filterBy="#{product.companyInformation.companyName}" filterMatchMode="contains">
+                                <h:outputText value="#{product.companyInformation.companyName}" />
+                            </p:column>
+
+                            <p:column headerText="Risk" filterBy="#{product.riskCategory.categoryName}">
+                                <h:outputText value="#{product.riskCategory.categoryName}" />
+                            </p:column>
+
+                            <p:column headerText="Premium" filterBy="#{product.premiumValue}">
+                                <h:outputText value="#{product.premiumValue}" />
+                            </p:column>
+
+                            <p:column headerText="Active" filterBy="#{product.active}">
+                                <p:tag value="#{product.active ? 'Yes' : 'No'}"
+                                       severity="#{product.active ? 'success' : 'danger'}"/>
+                            </p:column>
+
+                            <p:column headerText="Actions" style="width:150px;">
+                                <p:commandButton icon="pi pi-pencil" update=":productDialogForm"
+                                                 oncomplete="PF('productDialog').show()" process="@this"
+                                                 action="#{productController.editMethod(product)}" />
+
+                                <p:commandButton icon="pi pi-trash" styleClass="ui-button-danger"
+                                                 action="#{productController.deleteMethod(product)}"
+                                                 update="productTable msgs" />
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+
+                    <!-- Dialog for Create/Edit -->
+                    <p:dialog header="Product Form" widgetVar="productDialog" modal="true" appendTo="@(body)"
+                              draggable="true" resizable="false" id="productDialog" closable="true" width="80vw">
+
+                        <h:form id="productDialogForm" prependId="false">
+                            <ui:include src="productForm.xhtml" />
+
+                            <p:commandButton value="Save" icon="pi pi-check"
+                                             action="#{productController.saveMethod()}"
+                                             update=":productTableForm" 
+                                             oncomplete="PF('productDialog').hide()" />
+
+                            <p:commandButton value="Cancel" icon="pi pi-times"
+                                             onclick="PF('productDialog').hide(); return false;" />
+                        </h:form>
+                    </p:dialog>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+</ui:composition>

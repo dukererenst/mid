@@ -1,0 +1,50 @@
+<ui:composition 
+
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pa="http://primefaces.org/paradise"
+    xmlns:h="jakarta.faces.html"
+    xmlns:f="jakarta.faces.core"
+    xmlns:ui="jakarta.faces.facelets">
+
+    <div class="topbar">
+        <div class="topbar-wrapper">
+            <div class="topbar-left">
+                <h:link id="logolink" outcome="/dashboard" styleClass="topbar-logo">
+                  
+                    <p:graphicImage name="images/tf_small.png" style="border: 0px;" library="paradise-layout" />
+                    <!--<p:graphicImage name="images/amansie.png" style="border: 0px;" library="paradise-layout" />-->
+                    <!--<p:graphicImage name="images/sisl.png" style="border: 0px;" library="paradise-layout" />-->
+                </h:link>
+                <a href="#" id="menu-button">
+                    <i class="pi pi-bars"></i>
+                </a>
+                <label for="topbar-search">
+                    <i class="pi pi-search topbar-search-icon"></i>
+                </label>
+                <h:form>
+                    <p:inputText type="text" styleClass="topbar-search" placeholder="Type your search here" id="topbar-search" />
+                </h:form>
+            </div>
+            <div class="topbar-right">
+                <a href="#" id="user-display">
+                    <span class="username">#{loginController.username}</span>
+                    <p:graphicImage name="images/avatar.png" library="paradise-layout" style="border: 0px;"/>
+                </a>
+                <h:form>
+                    <ul id="topbar-menu" class="fadeInDown">
+                        <li>
+                            <p:commandLink action="#{loginController.logout()}">
+                                <i class="topbar-icon pi pi-fw pi-user"></i>
+                                <span class="topbar-item-name">Logout</span>
+                           </p:commandLink>
+                            
+                        </li>
+
+
+                    </ul>
+                </h:form>
+            </div>
+        </div>
+    </div>
+
+</ui:composition>

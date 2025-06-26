@@ -1,0 +1,172 @@
+<ui:composition template="/WEB-INF/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">Pending Sticker Request Management</ui:define>
+    <ui:define name="content">
+
+        <div class="card">
+            <h5>Pending Sticker Requests</h5>
+            <h:form id="stickerRequestForm" prependId="false">
+
+                <p:growl id="msgs" showDetail="true" />
+
+                <div class="flex justify-content-between align-items-center mb-3">
+                    
+
+                    <div class="p-input-icon-left" style="min-width: 250px;">
+                        <i class="pi pi-search" />
+                        <p:inputText id="globalFilter"
+                                     onkeyup="PF('requestsTable').filter()"
+                                     placeholder="Search all fields..."
+                                     styleClass="w-full" />
+                    </div>
+                </div>
+
+
+                <p:dataTable id="requestsTable"
+                             var="req"
+                             value="#{pendingStickerRequestController.lazyRequests}"
+                             lazy="true"
+                             paginator="true"
+                             paginatorPosition="bottom"
+                             rows="10"
+                             widgetVar="requestsTable"
+                             rowKey="#{req.id}"
+                             selection="#{pendingStickerRequestController.stickerRequest}"
+                             selectionMode="single"
+                             rowsPerPageTemplate="5,10,20"
+                             filterDelay="500">
+
+
+                    <p:column headerText="Batch">
+                        <h:outputText value="#{req.stickerBatch.batchName}" />
+                    </p:column>
+                    <p:column headerText="Company">
+                        <h:outputText value="#{req.companyInformation.companyName}" />
+                    </p:column>
+                    <p:column headerText="Quantity">
+                        <h:outputText value="#{req.quantity}" />
+                    </p:column>
+                    <p:column headerText="Paid">
+                        <h:outputText value="#{req.amountPaid}" />
+                    </p:column>
+                    <p:column headerText="Ref No">
+                        <h:outputText value="#{req.paymentRefNo}" />
+                    </p:column>
+                    <p:column headerText="Mode">
+                        <h:outputText value="#{req.modeOfPayment}" />
+                    </p:column>
+                    <p:column headerText="Request By">
+                        <h:outputText value="#{req.requestedBy}" />
+                    </p:column>
+                    <p:column headerText="Status">
+                        <h:outputText value="#{req.requestStatus.label}" />
+                    </p:column>
+                    <p:column headerText="Actions">
+                        <p:commandButton icon="pi pi-pencil" action="#{pendingStickerRequestController.editMethod(req)}" 
+                                         update=":dialogForm" oncomplete="PF('dialog').show()" />
+                        <p:commandButton value="Del" icon="pi pi-trash" styleClass="ui-button-danger"
+                                         oncomplete="PF('dlg').show()"
+                                         actionListener="#{pendingStickerRequestController.setStickerRequestToDelete(req)}" 
+                                         process="@this"/>
+
+                    </p:column>
+                </p:dataTable>
+                <p:confirmDialog message="Are you sure you want to delete?" header="Confirmation" id="dlg" widgetVar="dlg">
+                    <p:commandButton value="Yes"
+                                     action="#{pendingStickerRequestController.deleteMethod(pendingStickerRequestController.stickerRequestToDelete)}"
+                                     update="requestsTable msgs"
+                                     oncomplete="PF('dlg').hide()" />
+                    <p:commandButton value="No"
+                                     onclick="PF('dlg').hide()"
+                                     type="button" />
+                </p:confirmDialog>
+            </h:form>
+        </div>
+
+
+
+        <p:dialog header="Sticker Request Form" widgetVar="dialog" modal="true" id="dialog" appendTo="@(body)"
+                  width="70vw" closable="true">
+            <h:form id="dialogForm" prependId="false">
+                <div class="formgrid grid ui-fluid">
+                    <div class="col-6 md:col-6">
+                        <div class="field">
+                            <p:outputLabel value="Batch" for="batch"/>
+                            <p:selectOneMenu id="batch" value="#{pendingStickerRequestController.stickerRequest.stickerBatch}" required="true">
+                                <f:selectItems value="#{commonOption.stickerBatchList()}" var="b" itemLabel="#{b.batchName}" itemValue="#{b}"/>
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+                    <div class="col-6 md:col-6">
+                        <div class="field">
+                            <p:outputLabel value="Insurance Company" for="company" />
+                            <p:inputText id="company"
+                                         value="#{pendingStickerRequestController.stickerRequest.companyInformation.companyName}"
+                                             required="true"
+                                             readonly="true"
+                                             requiredMessage="Company selection is required"
+                                             />
+                            
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="field">
+                            <p:outputLabel value="Quantity" for="qty"/>
+                            <p:inputNumber id="qty" value="#{pendingStickerRequestController.stickerRequest.quantity}" required="true" readonly="true"/>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="field">
+                            <p:outputLabel value="Amount Paid" for="paid"/>
+                            <p:inputNumber id="paid" value="#{pendingStickerRequestController.stickerRequest.amountPaid}" readonly="true"/>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="field">
+                            <p:outputLabel value="Status" for="status"/>
+                            <p:selectOneMenu id="status" value="#{pendingStickerRequestController.stickerRequest.requestStatus}" required="true">
+                                <f:selectItems value="#{commonOption.stickerRequestStatus()}" var="s" itemLabel="#{s.label}" itemValue="#{s}"/>
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="field">
+                            <p:outputLabel value="Payment Mode" for="mode"/>
+                            <p:selectOneMenu id="mode" value="#{pendingStickerRequestController.stickerRequest.modeOfPayment}" required="true">
+                                <f:selectItems value="#{commonOption.modeOfPayment()}" var="m" itemLabel="#{m.label}" itemValue="#{m}"/>
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="field">
+                            <p:outputLabel value="Reference No" for="ref"/>
+                            <p:inputText id="ref" value="#{pendingStickerRequestController.stickerRequest.paymentRefNo}" readonly="true"/>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="field">
+                            <p:outputLabel value="Payment Date" for="date"/>
+                            <p:calendar id="date" value="#{pendingStickerRequestController.stickerRequest.dateOfPayment}" pattern="dd-MM-yyyy"/>
+                        </div>
+                    </div>
+                </div>
+
+
+                <p:commandButton value="Save" icon="pi pi-check"
+                                 action="#{pendingStickerRequestController.saveMethod()}"
+                                 update=":stickerRequestForm:msgs requestsTable" oncomplete="PF('dialog').hide()" />
+
+                <p:commandButton value="Cancel" icon="pi pi-times"
+                                 onclick="PF('dialog').hide(); return false;" />
+
+            </h:form>
+        </p:dialog>
+
+    </ui:define>
+</ui:composition>

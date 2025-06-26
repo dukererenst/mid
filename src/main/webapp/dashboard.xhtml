@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html">
+
+    <ui:define name="title">Dashboard</ui:define>
+
+    <ui:define name="head">
+        
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="grid dashboard">
+            <div class="col-6 md:col-4 xl:col-2">
+                <div class="card overview-box blue">
+                   <i class="pi pi-globe"></i>
+                   <h5>All Verification</h5>
+                   <span>784.00 </span>
+                </div>
+            </div>
+            <div class="col-6 md:col-4 xl:col-2">
+                <div class="card overview-box green">
+                   <i class="pi pi-dollar"></i>
+                   <h5>Mobile App</h5>
+                   <span>00</span>
+                </div>
+            </div>
+            <div class="col-6 md:col-4 xl:col-2">
+                <div class="card overview-box orange">
+                   <i class="pi pi-tag"></i>
+                   <h5>Web Portal</h5>
+                   <span>00</span>
+                </div>
+            </div>
+            <div class="col-6 md:col-4 xl:col-2">
+                <div class="card overview-box lime">
+                   <i class="pi pi-money-bill"></i>
+                   <h5>Call back</h5>
+                   <span>00</span>
+                </div>
+            </div>
+            <div class="col-6 md:col-4 xl:col-2">
+                <div class="card overview-box purple">
+                   <i class="pi pi-envelope"></i>
+                   <h5>LINK Verifications</h5>
+                   <span>00</span>
+                </div>
+            </div>
+            <div class="col-6 md:col-4 xl:col-2">
+                <div class="card overview-box turquoise">
+                   <i class="pi pi-desktop"></i>
+                   <h5>Total Failed</h5>
+                   <span>00</span>
+                </div>
+            </div>
+               
+        </div>
+         <div class="grid dashboard">
+            <div class="col-12 md:col-12">
+               <div class="card summary flex justify-content-between">
+                    <div>
+                        <span class="title">Download App</span>
+                        <span class="detail">APP URL</span>
+                    </div>
+                    <div class="flex align-items-center">
+                         
+                         <span class="count revenue p-2">#{dashboardController.companyInformation.baseUrl}/rest/api/v2/download/test</span>
+                    </div>
+                </div> 
+            </div>
+             
+        </div>
+    </ui:define>
+
+</ui:composition>

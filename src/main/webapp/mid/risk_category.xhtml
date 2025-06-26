@@ -1,0 +1,210 @@
+<ui:composition template="/WEB-INF/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="jakarta.tags.core">
+
+    <ui:define name="title">Risk Category Management</ui:define>
+    <ui:define name="content">
+      <div class="card">
+        <h5>Risk Categories</h5>
+        <hr/>
+
+        <!-- Table & Toolbar -->
+        <h:form id="riskCategoryTableForm" prependId="false">
+          <p:growl id="msgs" showDetail="true" life="5000"/>
+
+          <div class="flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <div class="flex align-items-center gap-2">
+              <p:commandButton value="New Risk Category" icon="pi pi-plus"
+                               styleClass="ui-button-success"
+                               action="#{riskCategoryController.prepareNew}"
+                               update="riskCategoryDialogForm"
+                               oncomplete="PF('riskCategoryDialog').show()" />
+
+              <p:commandButton value="Reset Filters" icon="pi pi-filter-slash"
+                               styleClass="ui-button-secondary"
+                               onclick="PF('riskCategoryTable').clearFilters(); return false;" />
+            </div>
+            <div class="p-input-icon-left w-100 md:w-30rem">
+              <i class="pi pi-search"/>
+              <p:inputText id="globalFilter"
+                           onkeyup="PF('riskCategoryTable').filter()"
+                           placeholder="Search risk categories..." styleClass="w-full" />
+            </div>
+          </div>
+
+          <p:dataTable id="riskCategoryTable"
+                       widgetVar="riskCategoryTable"
+                       var="rc"
+                       lazy="true"
+                       value="#{riskCategoryController.lazyRiskCategories}"
+                       filteredValue="#{riskCategoryController.filteredRiskCategories}"
+                       globalFilter="globalFilter"
+                       rowKey="#{rc.id}"
+                       paginator="true"
+                       rows="10"
+                       emptyMessage="No risk categories found.">
+
+            <p:column headerText="Type Name" filterBy="#{rc.riskTypeName}" filterMatchMode="contains">
+              #{rc.riskTypeName}
+            </p:column>
+            <p:column headerText="Type Code" filterBy="#{rc.riskTypeCode}" filterMatchMode="contains">
+              #{rc.riskTypeCode}
+            </p:column>
+            <p:column headerText="Year" filterBy="#{rc.currentYear}" sortBy="#{rc.currentYear}">
+              #{rc.currentYear}
+            </p:column>
+            <p:column headerText="Basic Premium" filterBy="#{rc.basicPremium}" sortBy="#{rc.basicPremium}">
+              #{rc.basicPremium}
+            </p:column>
+            <p:column headerText="Active">
+              <p:tag value="#{rc.active ? 'Yes' : 'No'}"
+                     severity="#{rc.active ? 'success' : 'danger'}"/>
+            </p:column>
+
+            <p:column headerText="Actions" style="width:120px">
+              <p:commandButton icon="pi pi-pencil" title="Edit"
+                               actionListener="#{riskCategoryController.editMethod(rc)}"
+                               update="riskCategoryDialogForm"
+                               oncomplete="PF('riskCategoryDialog').show()" />
+              <p:commandButton icon="pi pi-trash" title="Delete"
+                               actionListener="#{riskCategoryController.deleteMethod(rc)}"
+                               update="riskCategoryTableForm msgs"
+                               process="@this"
+                               onclick="return confirm('Delete this risk category?');" />
+            </p:column>
+
+          </p:dataTable>
+        </h:form>
+
+        <!-- Dialog -->
+        <p:dialog header="Risk Category Details"
+                  widgetVar="riskCategoryDialog"
+                  modal="true"
+                  width="70vw"
+                  appendTo="@(body)"
+                  resizable="false"
+                  closable="true">
+          <h:form id="riskCategoryDialogForm">
+            <p:tabView>
+
+              <!-- General -->
+              <p:tab title="General">
+                <div class="grid ui-fluid" style="gap:1rem">
+                  <div class="col-12 md:col-6">
+                    <h:outputLabel for="typeName" value="Type Name:"/>
+                    <p:inputText id="typeName"
+                                 value="#{riskCategoryController.selected.riskTypeName}"
+                                 required="true"/>
+                  </div>
+                  <div class="col-12 md:col-6">
+                    <h:outputLabel for="typeCode" value="Type Code:"/>
+                    <p:inputText id="typeCode"
+                                 value="#{riskCategoryController.selected.riskTypeCode}"
+                                 required="true"/>
+                  </div>
+                  <div class="col-12">
+                    <h:outputLabel for="description" value="Description:"/>
+                    <p:inputTextarea id="description"
+                                     value="#{riskCategoryController.selected.description}"
+                                     rows="4" autoResize="true"/>
+                  </div>
+                  <div class="col-12 md:col-4">
+                    <h:outputLabel for="year" value="Current Year:"/>
+                    <p:spinner id="year"
+                               value="#{riskCategoryController.selected.currentYear}"
+                               min="2000" max="2100"/>
+                  </div>
+                  <div class="col-12 md:col-4">
+                    <h:outputLabel for="active" value="Active:"/>
+                    <p:selectBooleanCheckbox id="active"
+                                             value="#{riskCategoryController.selected.active}"/>
+                  </div>
+                </div>
+              </p:tab>
+
+              <!-- Premiums & Rates -->
+              <p:tab title="Premiums & Rates">
+                <div class="grid ui-fluid" style="gap:1rem">
+                  <c:forEach items="#{['basicPremium','tppdl','tpi','opEx','motorContribution','adminCharges','brownCard','ownDamageRate','comprehensiveRate','thirdPartyFireAndTheftRate','tppdlRate','umbrellaLimitRate','tppdlAmount','excessRate','deathLimit','bodilyInjury']}" var="field">
+                    <div class="col-12 md:col-4">
+                      <h:outputLabel for="#{field}" value="#{field.replaceAll('([A-Z])',' $1').capitalize()}:"/>
+                      <p:inputNumber id="#{field}"
+                                     value="#{riskCategoryController.selected[field]}"
+                                     />
+                    </div>
+                  </c:forEach>
+                </div>
+              </p:tab>
+
+              <!-- Seat & Perils -->
+              <p:tab title="Seat & Perils">
+                <div class="grid ui-fluid" style="gap:1rem">
+                  <div class="col-12 md:col-4">
+                    <h:outputLabel for="minimumSeat" value="Minimum Seat:"/>
+                    <p:inputNumber id="minimumSeat"
+                                   value="#{riskCategoryController.selected.minimumSeat}"
+                                   minValue="0" />
+                  </div>
+                  <c:forEach items="#{['extraSeatCharge','additionalPerilCharge','ecowasPerilCharge','personalAccidentCharge','otherCharges']}" var="field">
+                    <div class="col-12 md:col-4">
+                      <h:outputLabel for="#{field}" value="#{field.replaceAll('([A-Z])',' $1').capitalize()}:"/>
+                      <p:inputNumber id="#{field}"
+                                     value="#{riskCategoryController.selected[field]}"
+                                     minValue="0" />
+                    </div>
+                  </c:forEach>
+                </div>
+              </p:tab>
+
+              <!-- Private Categories -->
+              <p:tab title="Private Categories">
+                <div class="grid ui-fluid" style="gap:1rem">
+                  <c:forEach items="#{['private0','private1','private2','private3','private4','private5More']}" var="field">
+                    <div class="col-12 md:col-4">
+                      <h:outputLabel for="#{field}" value="#{field.replaceAll('[0-9]',' $0').replaceAll('More',' 5+').capitalize()}:"/>
+                      <p:inputNumber id="#{field}"
+                                     value="#{riskCategoryController.selected[field]}"
+                                     minValue="0" />
+                    </div>
+                  </c:forEach>
+                </div>
+              </p:tab>
+
+              <!-- Commercial Categories -->
+              <p:tab title="Commercial Categories">
+                <div class="grid ui-fluid" style="gap:1rem">
+                  <c:forEach items="#{['commercial0','commercial1','commercial2','commercial3','commercial4','commercial5More']}" var="field">
+                    <div class="col-12 md:col-4">
+                      <h:outputLabel for="#{field}" value="#{field.replaceAll('[0-9]',' $0').replaceAll('More',' 5+').capitalize()}:"/>
+                      <p:inputNumber id="#{field}"
+                                     value="#{riskCategoryController.selected[field]}"
+                                     minValue="0" />
+                    </div>
+                  </c:forEach>
+                </div>
+              </p:tab>
+
+            </p:tabView>
+
+            <p:separator/>
+
+            <p:commandButton value="Save"
+                             icon="pi pi-save"
+                             actionListener="#{riskCategoryController.saveMethod()}"
+                             update="riskCategoryTableForm msgs"
+                             oncomplete="PF('riskCategoryDialog').hide()" />
+            <p:commandButton value="Cancel"
+                             icon="pi pi-times"
+                             actionListener="#{riskCategoryController.clearMethod()}"
+                             type="button"
+                             onclick="PF('riskCategoryDialog').hide()" />
+          </h:form>
+        </p:dialog>
+
+      </div>
+    </ui:define>
+</ui:composition>

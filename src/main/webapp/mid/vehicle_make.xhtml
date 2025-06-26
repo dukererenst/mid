@@ -1,0 +1,89 @@
+<ui:composition template="/WEB-INF/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">Vehicle Make Management</ui:define>
+    <ui:define name="content">
+
+        <div class="card">
+            <h5>Vehicle Make Information</h5>
+            <hr/>
+            <div class="grid">
+                <div class="col-6 md:col-6">
+
+                    <h:form id="vehicleMakeForm">
+                        <p:growl/>
+                        <div class="formgrid grid ui-fluid">
+                            <div class="col-12 md:col-6">
+                                <div class="field">
+                                    <p:outputLabel for="cName">Vehicle Make Name</p:outputLabel>
+                                    <p:inputText id="cName" type="text" value="#{vehicleMakeController.vehicleMake.vehicleMakeName}" required="true" requiredMessage="Required"/>
+                                </div> 
+
+                            </div>  
+                            <div class="col-12 md:col-6">
+                                <div class="field">
+                                    <p:outputLabel for="gname">Vehicle Make Code</p:outputLabel>
+                                    <p:inputText id="gname" type="text" value="#{vehicleMakeController.vehicleMake.vehicleMakeCode}" required="true" requiredMessage="Required"/>
+                                </div>      
+
+                            </div> 
+
+
+
+
+                        </div>
+
+                        <p:commandButton value="Submit" styleClass="mr-2 mb-2" action="#{vehicleMakeController.saveMethod()}" ajax="false"/>
+                        <p:commandButton value="Clear" styleClass="ui-button-danger" action="#{vehicleMakeController.clearMethod()}" ajax="false" immediate="true"/>
+
+                    </h:form>
+
+                </div>
+                <div class="col-6 md:col-6">
+
+                    <h5>Vehicle Make List</h5>
+
+                    <h:form id="vehicleMakeList">
+                        <p:growl id="deleted"/>
+                        <p:dataTable widgetVar="sectorDT" value="#{vehicleMakeController.vehicleMakesList}" var="cate" paginator="true" rows="10" reflow="true" 
+                                     paginatorPosition="bottom" 
+                                     selection="#{vehicleMakeController.vehicleMake}" rowKey="#{cate.id}" selectionMode="single">
+
+                            <p:column headerText="Vehicle Make Name"  >
+                                <h:outputLabel value="#{cate.vehicleMakeName}"/>
+                            </p:column>
+                            <p:column headerText="Vehicle Make Code">
+                                <h:outputLabel value="#{cate.vehicleMakeCode}"/>
+                            </p:column>
+                            <p:column headerText="Action">
+                                <p:commandButton value="Edit" icon="pi pi-pencil" action="#{vehicleMakeController.editMethod(cate)}" ajax="false"/>  |
+                                <p:commandButton value="Del" icon="pi pi-trash" styleClass="ui-button-danger"
+                                                 oncomplete="PF('dlg').show()"
+                                                 actionListener="#{vehicleMakeController.setVehicleMakeToDelete(cate)}" 
+                                                 process="@this"/>
+
+                            </p:column>
+
+                        </p:dataTable>
+
+                        <p:confirmDialog message="Are you sure you want to delete?" header="Confirmation" id="dlg" widgetVar="dlg">
+                            <p:commandButton value="Yes"
+                                             action="#{vehicleMakeController.deleteMethod(vehicleMakeController.vehicleMakeToDelete)}"
+                                             update="vehicleMakeList deleted"
+                                             oncomplete="PF('dlg').hide()" />
+                            <p:commandButton value="No"
+                                             onclick="PF('dlg').hide()"
+                                             type="button" />
+                        </p:confirmDialog>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+
+
+    </ui:define>
+</ui:composition>

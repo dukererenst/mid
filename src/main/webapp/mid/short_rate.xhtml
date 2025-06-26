@@ -1,0 +1,98 @@
+<ui:composition template="/WEB-INF/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">Short Rates Management</ui:define>
+    <ui:define name="content">
+
+        <div class="card">
+            <h5>Short Rates Information</h5>
+            <hr/>
+            <div class="grid">
+                <div class="col-6 md:col-6">
+
+                    <h:form id="shortRatesForm">
+                        <p:growl/>
+                        <div class="formgrid grid ui-fluid">
+                            <div class="col-12 md:col-6">
+                                <div class="field">
+                                    <p:outputLabel for="lband">Lower Band</p:outputLabel>
+                                    <p:inputNumber id="lband"  value="#{shortRatesController.shortRates.lowerBand}" required="true" requiredMessage="Required"/>
+                                </div> 
+
+                            </div>  
+                            <div class="col-12 md:col-6">
+                                <div class="field">
+                                    <p:outputLabel for="uband">Upper Band</p:outputLabel>
+                                    <p:inputNumber id="uband"  value="#{shortRatesController.shortRates.upperBand}" required="true" requiredMessage="Required"/>
+                                </div>      
+
+                            </div> 
+                            <div class="col-12 md:col-6">
+                                <div class="field">
+                                    <p:outputLabel for="rate">Rate</p:outputLabel>
+                                    <p:inputNumber id="rate"  value="#{shortRatesController.shortRates.rate}" required="true" requiredMessage="Required"/>
+                                </div>      
+
+                            </div> 
+
+
+
+
+                        </div>
+
+                        <p:commandButton value="Submit" styleClass="mr-2 mb-2" action="#{shortRatesController.saveMethod()}" ajax="false"/>
+                        <p:commandButton value="Clear" styleClass="ui-button-danger" action="#{shortRatesController.clearMethod()}" ajax="false" 
+                                         immediate="true"
+                                         update="shortRatesForm" process="@form"/>
+
+                    </h:form>
+
+                </div>
+                <div class="col-6 md:col-6">
+
+                    <h5>Short Rates List</h5>
+                    <p:growl id="deleted"/>
+                    <h:form id="shortRatesList">
+
+                        <p:dataTable widgetVar="sectorDT" value="#{shortRatesController.shortRatessList}" var="cate" paginator="true" rows="10" reflow="true" 
+                                     paginatorPosition="bottom" 
+                                     >
+
+                            <p:column headerText="Upper Band"  >
+                                <h:outputLabel value="#{cate.upperBand}"/>
+                            </p:column>
+                            <p:column headerText="Lower Band">
+                                <h:outputLabel value="#{cate.lowerBand}"/>
+                            </p:column>
+                            <p:column headerText="Action">
+                                <p:commandButton value="Edit" icon="pi pi-pencil" action="#{shortRatesController.editMethod(cate)}" ajax="false"/>  |
+                                <p:commandButton value="Del" icon="pi pi-trash" styleClass="ui-button-danger"
+                                                 oncomplete="PF('dlg').show()"
+                                                 actionListener="#{shortRatesController.setShortRatesToDelete(cate)}" 
+                                                 process="@this"/>
+
+                            </p:column>
+
+                        </p:dataTable>
+
+                         <p:confirmDialog message="Are you sure you want to delete?" header="Confirmation" id="dlg" widgetVar="dlg">
+                            <p:commandButton value="Yes"
+                                             action="#{shortRatesController.deleteMethod(shortRatesController.shortRatesToDelete)}"
+                                             update="shortRatesList deleted"
+                                             oncomplete="PF('dlg').hide()" />
+                            <p:commandButton value="No"
+                                             onclick="PF('dlg').hide()"
+                                             type="button" />
+                        </p:confirmDialog>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+
+
+    </ui:define>
+</ui:composition>
