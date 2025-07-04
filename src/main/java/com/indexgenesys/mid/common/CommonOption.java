@@ -29,6 +29,7 @@ import jakarta.inject.Named;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,18 +43,18 @@ public class CommonOption implements Serializable {
 
     @Inject
     MidService midService;
-    
 
     public CommonOption() {
     }
-    
+
     public List<Gender> getGenders() {
-    return Arrays.asList(Gender.values());
-}
+        return Arrays.asList(Gender.values());
+    }
 
     public List<CompanyType> companyType() {
         return Arrays.asList(CompanyType.values());
     }
+
     public List<CustomerType> customerType() {
         return Arrays.asList(CustomerType.values());
     }
@@ -61,43 +62,51 @@ public class CommonOption implements Serializable {
     public List<PriceType> priceType() {
         return Arrays.asList(PriceType.values());
     }
-    
+
     public List<VehicleUsageType> vehicleUsageType() {
         return Arrays.asList(VehicleUsageType.values());
     }
+
     public List<ModeOfPayment> modeOfPayment() {
         return Arrays.asList(ModeOfPayment.values());
     }
+
     public List<StickerRequestStatus> stickerRequestStatus() {
         return Arrays.asList(StickerRequestStatus.values());
     }
+
+    public List<StickerRequestStatus> stickerRequestApprovalStatus() {
+        List<StickerRequestStatus> requestStatuses = new ArrayList<>();
+        requestStatuses.add(StickerRequestStatus.APPROVED);
+        requestStatuses.add(StickerRequestStatus.CANCELLED);
+        return requestStatuses;
+    }
+
     public List<StickerStatus> stickerStatus() {
         return Arrays.asList(StickerStatus.values());
     }
-    
-  
+
     public List<CompanyInformation> insuranceCompanysList() {
         return midService.findAll(CompanyInformation.class, "companyName");
     }
-    
+
     public List<RiskCategory> riskCategoryList() {
         return midService.findAll(RiskCategory.class, "categoryName");
     }
-    
+
     public List<VehicleType> vehicleTypeList() {
         return midService.findAll(VehicleType.class, "vehicleTypeName");
     }
-    
+
     public List<ProductType> productTypeList() {
         return midService.findAll(ProductType.class, "productTypeName");
     }
-    
+
     public List<StickerBatch> stickerBatchList() {
         return midService.findAll(StickerBatch.class, "batchName");
 //        return midService.findAll(StickerBatch.class, "batchName", "batchStatus", BatchStatus.ACTIVE);
-        
-    }
 
+    }
 
     public List<Region> regionList() {
         return midService.findAll(Region.class, "regionName");
@@ -106,13 +115,15 @@ public class CommonOption implements Serializable {
     public List<VehicleMake> vehicleMakeList() {
         return midService.findAll(VehicleMake.class, "vehicleMakeName");
     }
+
     public List<VehicleModel> vehicleModelList() {
         return midService.findAll(VehicleModel.class, "vehicleModelName");
     }
+
     public List<VehicleBodyType> vehicleBodyTypeList() {
         return midService.findAll(VehicleBodyType.class, "vehicleBodyTypeName");
     }
-    
+
     public List<Items> itemsList() {
         return midService.findAll(Items.class, "itemName");
     }

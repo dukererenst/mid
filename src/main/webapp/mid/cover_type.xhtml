@@ -52,7 +52,7 @@
                         </div>
 
                         <p:commandButton value="Submit" styleClass="mr-2 mb-2" action="#{coverTypeController.saveMethod()}" ajax="false"/>
-                        <p:commandButton value="Clear" styleClass="ui-button-danger" action="#{coverTypeController.clearMethod()}" ajax="false" immediate="true"/>
+                        <p:commandButton value="Clear" styleClass="ui-button-danger" action="#{coverTypeController.clearMethod()}" ajax="true" update="@form" process="@this"/>
 
                     </h:form>
 

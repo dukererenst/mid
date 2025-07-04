@@ -38,7 +38,7 @@
                         </div>
 
                         <p:commandButton value="Submit" styleClass="mr-2 mb-2" action="#{itemsController.saveMethod()}" ajax="false"/>
-                        <p:commandButton value="Clear" styleClass="ui-button-danger" action="#{itemsController.clearMethod()}" ajax="false" immediate="true"/>
+                        <p:commandButton value="Clear" styleClass="ui-button-danger" action="#{itemsController.clearMethod()}" ajax="true" update="@form" process="@this"/>
 
                     </h:form>
 

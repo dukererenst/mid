@@ -8,7 +8,6 @@ import com.indexgenesys.mid.abstracts.MidMethods;
 import com.indexgenesys.mid.common.Variable;
 import com.indexgenesys.mid.entity.EntityModel;
 import com.indexgenesys.mid.entity.mid.VehicleModel;
-import com.indexgenesys.mid.entity.mid.VehicleModel;
 import com.indexgenesys.mid.service.IdGenerator;
 import com.indexgenesys.mid.service.MidService;
 import com.indexgenesys.mid.util.JSF;
@@ -16,7 +15,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 
 import jakarta.inject.Named;
-import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import java.io.Serializable;
 import java.time.LocalDateTime;

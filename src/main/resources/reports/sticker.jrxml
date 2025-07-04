@@ -1,0 +1,56 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="VehicleSticker" language="java" pageWidth="300" pageHeight="200" columnWidth="300" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="8d8afb7e-7cdd-406a-a18d-d7b94ead01d5">
+	<style name="BaseStyle" fontName="SansSerif" fontSize="10.0"/>
+	<style name="TitleStyle" fontName="SansSerif" fontSize="14.0" bold="true"/>
+	<parameter name="stickerNumber" class="java.lang.String"/>
+	<parameter name="serialNumber" class="java.lang.String"/>
+	<parameter name="registrationNumber" class="java.lang.String"/>
+	<parameter name="chassisNumber" class="java.lang.String"/>
+	<parameter name="insuranceCompany" class="java.lang.String"/>
+	<parameter name="vehicleColor" class="java.lang.String"/>
+	<parameter name="vehicleUsage" class="java.lang.String"/>
+	<parameter name="validFrom" class="java.util.Date"/>
+	<parameter name="validTo" class="java.util.Date"/>
+	<parameter name="qrCodeImage" class="java.awt.Image"/>
+	<parameter name="backgroundImage" class="java.awt.Image"/>
+	<background height="200">
+		<element kind="image" uuid="21a143dd-36c3-42bc-a93d-67a3a3e2d809" x="0" y="0" width="300" height="200" scaleImage="FillFrame" hImageAlign="Center" vImageAlign="Middle">
+			<expression><![CDATA[$P{backgroundImage}]]></expression>
+		</element>
+	</background>
+	<detail>
+		<band height="200">
+			<element kind="staticText" uuid="e9cede1f-b42b-4513-93db-b0f4569cf6be" x="0" y="0" width="300" height="20" hTextAlign="Center" vTextAlign="Middle" style="TitleStyle">
+				<text><![CDATA[Vehicle Insurance Sticker]]></text>
+			</element>
+			<element kind="textField" uuid="2e8ca4bf-29c4-41bc-b320-d3f2d2b6a58b" x="10" y="25" width="160" height="16" style="BaseStyle">
+				<expression><![CDATA["Sticker No: " + $P{stickerNumber}]]></expression>
+			</element>
+			<element kind="textField" uuid="55e3cd2e-167b-4653-819d-be36e8cd84a7" x="10" y="40" width="160" height="16" style="BaseStyle">
+				<expression><![CDATA["Serial No: " + $P{serialNumber}]]></expression>
+			</element>
+			<element kind="textField" uuid="40e14853-9bbb-4e85-847d-769b69e615ed" x="10" y="55" width="160" height="16" style="BaseStyle">
+				<expression><![CDATA["Reg No: " + $P{registrationNumber}]]></expression>
+			</element>
+			<element kind="textField" uuid="3566373e-f0d1-4ec0-8073-d18de8324cd2" x="10" y="70" width="160" height="16" style="BaseStyle">
+				<expression><![CDATA["Chassis: " + $P{chassisNumber}]]></expression>
+			</element>
+			<element kind="textField" uuid="87fa8577-f956-4fc5-ab89-f71a822dcba8" x="10" y="85" width="160" height="16" style="BaseStyle">
+				<expression><![CDATA["Color: " + $P{vehicleColor}]]></expression>
+			</element>
+			<element kind="textField" uuid="91073e0e-b02e-4b94-adf5-cfa34e1813e5" x="10" y="100" width="160" height="16" style="BaseStyle">
+				<expression><![CDATA["Usage: " + $P{vehicleUsage}]]></expression>
+			</element>
+			<element kind="textField" uuid="bf9d0e83-813a-406b-9041-be14468ed7ea" x="10" y="115" width="160" height="16" style="BaseStyle">
+				<expression><![CDATA["Company: " + $P{insuranceCompany}]]></expression>
+			</element>
+			<element kind="textField" uuid="ff973515-9eb8-4bff-9223-953933a4fd4e" x="10" y="130" width="280" height="16" style="BaseStyle">
+				<expression><![CDATA["Valid: " + new java.text.SimpleDateFormat("dd-MM-yyyy").format($P{validFrom}) +
+                    " to " + new java.text.SimpleDateFormat("dd-MM-yyyy").format($P{validTo})]]></expression>
+			</element>
+			<element kind="image" uuid="87078663-5330-42fd-b34d-bf56013f36c1" x="186" y="26" width="100" height="100">
+				<expression><![CDATA[$P{qrCodeImage}]]></expression>
+			</element>
+		</band>
+	</detail>
+</jasperReport>

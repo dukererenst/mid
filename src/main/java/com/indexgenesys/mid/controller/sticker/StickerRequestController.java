@@ -86,7 +86,7 @@ public class StickerRequestController implements Serializable, MidMethods {
 
     @Override
     public void saveMethod() {
-        idGenerator.uniqueEntityId(stickerRequest);
+        idGenerator.uniqueStickerRequestId(stickerRequest);
         if (stickerRequestFacade.save(stickerRequest) != null) {
             clearMethod();
             JSF.addSuccessMessage(Variable.saveSuccess);

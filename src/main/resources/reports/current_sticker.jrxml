@@ -1,0 +1,118 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="StickerReport" language="java" columnCount="1" pageWidth="350" pageHeight="300" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="340" leftMargin="5" rightMargin="5" topMargin="5" bottomMargin="5">
+    <property name="com.jaspersoft.studio.unit." value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+    <parameter name="companyCode" class="java.lang.String"/>
+    <parameter name="nic_logo" class="java.io.InputStream"/>
+    <field name="stickerNo" class="java.lang.String"/>
+    <field name="make" class="java.lang.String"/>
+    <field name="model" class="java.lang.String"/>
+    <field name="color" class="java.lang.String"/>
+    <field name="inception" class="java.util.Date"/>
+    <field name="expiry" class="java.util.Date"/>
+    <field name="qrCode" class="java.io.InputStream"/>
+    <field name="usage" class="java.lang.String"/>
+    <field name="registrationNo" class="java.lang.String"/>
+    <background>
+        <band height="240">
+            <image>
+                <reportElement x="90" y="70" width="130" height="110"/>
+                <imageExpression><![CDATA[$P{nic_logo}]]></imageExpression>
+            </image>
+        </band>
+    </background>
+    <detail>
+        <band height="290">
+            <!-- Header content -->
+            <textField isStretchWithOverflow="true">
+                <reportElement x="0" y="0" width="340" height="30"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="20" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{companyCode}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="0" y="32" width="340" height="20"/>
+                <textElement textAlignment="Center">
+                    <font size="16"/>
+                </textElement>
+                <text><![CDATA[National Insurance Commission]]></text>
+            </staticText>
+            <!-- Moved Registration No above Sticker No -->
+            <staticText>
+                <reportElement x="0" y="60" width="100" height="20"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Reg. No:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="82" y="60" width="168" height="20"/>
+                <textElement>
+                    <font isBold="true" size="16"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{registrationNo}.toUpperCase()]]></textFieldExpression>
+            </textField>
+            <!-- Sticker No follows -->
+            <staticText>
+                <reportElement x="0" y="82" width="80" height="20"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Sticker No:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="82" y="82" width="168" height="20"/>
+                <textFieldExpression><![CDATA[$F{stickerNo}]]></textFieldExpression>
+            </textField>
+            <!-- Remaining detail fields -->
+            <staticText>
+                <reportElement x="0" y="104" width="80" height="20"/>
+                <textElement><font isBold="true"/></textElement>
+                <text><![CDATA[Make:]]></text>
+            </staticText>
+            <textField><reportElement x="82" y="104" width="168" height="20"/><textFieldExpression><![CDATA[$F{make}]]></textFieldExpression></textField>
+            <staticText>
+                <reportElement x="0" y="126" width="80" height="20"/>
+                <textElement><font isBold="true"/></textElement>
+                <text><![CDATA[Model:]]></text>
+            </staticText>
+            <textField><reportElement x="82" y="126" width="168" height="20"/><textFieldExpression><![CDATA[$F{model}]]></textFieldExpression></textField>
+            <staticText>
+                <reportElement x="0" y="148" width="80" height="20"/>
+                <textElement><font isBold="true"/></textElement>
+                <text><![CDATA[Color:]]></text>
+            </staticText>
+            <textField><reportElement x="82" y="148" width="168" height="20"/><textFieldExpression><![CDATA[$F{color}]]></textFieldExpression></textField>
+            <staticText>
+                <reportElement x="0" y="170" width="80" height="20"/>
+                <textElement><font isBold="true"/></textElement>
+                <text><![CDATA[Inception:]]></text>
+            </staticText>
+            <textField><reportElement x="82" y="170" width="98" height="20"/><textFieldExpression><![CDATA[new java.text.SimpleDateFormat("yyyy-MM-dd").format($F{inception})]]></textFieldExpression></textField>
+            <staticText>
+                <reportElement x="0" y="192" width="80" height="20"/>
+                <textElement><font isBold="true"/></textElement>
+                <text><![CDATA[Expiry:]]></text>
+            </staticText>
+            <textField><reportElement x="82" y="192" width="98" height="20"/><textFieldExpression><![CDATA[new java.text.SimpleDateFormat("yyyy-MM-dd").format($F{expiry})]]></textFieldExpression></textField>
+            <image>
+                <reportElement x="206" y="159" width="119" height="110"/>
+                <imageExpression><![CDATA[$F{qrCode}]]></imageExpression>
+            </image>
+            <staticText>
+                <reportElement x="0" y="214" width="80" height="20"/>
+                <textElement><font isBold="true"/></textElement>
+                <text><![CDATA[Usage:]]></text>
+            </staticText>
+            <textField><reportElement x="82" y="214" width="98" height="20"/><textFieldExpression><![CDATA[$F{usage}]]></textFieldExpression></textField>
+        </band>
+    </detail>
+</jasperReport>
