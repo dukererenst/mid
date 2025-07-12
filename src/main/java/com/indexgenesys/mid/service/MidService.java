@@ -46,7 +46,7 @@ import org.primefaces.model.SortOrder;
 @Stateless
 public class MidService implements Serializable {
 
-    @PersistenceContext(name = "my_persistence_unit")
+    @PersistenceContext(name = "midConnectionPool")
     EntityManager em;
 
     public Boolean delete(EntityModel information) {

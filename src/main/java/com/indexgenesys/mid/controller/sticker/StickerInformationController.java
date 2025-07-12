@@ -74,21 +74,7 @@ public class StickerInformationController implements Serializable, MidMethods {
     public void init() {
         lazyRequests = new LazyDataModel<>() {
 
-            @Override
-            public String getRowKey(StickerInformation request) {
-                return request.getId() != null ? request.getId().toString() : null;
-            }
-
-            @Override
-            public StickerInformation getRowData(String rowKey) {
-                try {
-                    UUID uuid = UUID.fromString(rowKey);
-                    return stickerInformationFacade.find(StickerInformation.class, uuid);
-                } catch (IllegalArgumentException e) {
-                    return null;
-                }
-            }
-
+            
             @Override
             public int count(Map<String, FilterMeta> filters) {
                 return stickerInformationFacade.countStatusFiltered(filters, StickerStatus.GENERATED);

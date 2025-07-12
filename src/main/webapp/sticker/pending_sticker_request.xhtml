@@ -67,13 +67,18 @@
                         <h:outputText value="#{req.requestStatus.label}" />
                     </p:column>
                     <p:column headerText="Actions">
-                        <p:commandButton icon="pi pi-pencil" action="#{pendingStickerRequestController.editMethod(req)}" 
-                                         update=":dialogForm" oncomplete="PF('dialog').show()" />
-                        <p:commandButton value="Del" icon="pi pi-trash" styleClass="ui-button-danger"
+                        <p:splitButton value="View"  icon="pi pi-pencil" action="#{pendingStickerRequestController.editMethod(req)}" 
+                                         update=":dialogForm" oncomplete="PF('dialog').show()">
+                            <p:menuitem value="Approve" action="#{pendingStickerRequestController.approveMethod(req)}" update="requestsTable" ajax="false" icon="pi pi-check"/>
+            <p:menuitem value="Cancel" action="#{pendingStickerRequestController.cancelMethod(req)}" ajax="false" icon="pi pi-times" update="requestsTable"/> 
+            <p:divider />
+            <p:menuitem value="Delete" icon="pi pi-trash" styleClass="ui-button-danger"
                                          oncomplete="PF('dlg').show()"
                                          actionListener="#{pendingStickerRequestController.setStickerRequestToDelete(req)}" 
                                          process="@this"/>
-
+        </p:splitButton>
+                        
+                     
                     </p:column>
                 </p:dataTable>
                 <p:confirmDialog message="Are you sure you want to delete?" header="Confirmation" id="dlg" widgetVar="dlg">
@@ -131,16 +136,16 @@
                         <div class="field">
                             <p:outputLabel value="Status" for="status"/>
                             <p:selectOneMenu id="status" value="#{pendingStickerRequestController.stickerRequest.requestStatus}" required="true">
-                                <f:selectItems value="#{commonOption.stickerRequestStatus()}" var="s" itemLabel="#{s.label}" itemValue="#{s}"/>
+                                 <f:selectItem itemLabel="Select One" itemValue="#{null}" noSelectionOption="true" />
+                                <f:selectItems value="#{commonOption.stickerRequestApprovalStatus()}" var="s" itemLabel="#{s.label}" itemValue="#{s}"/>
                             </p:selectOneMenu>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="field">
                             <p:outputLabel value="Payment Mode" for="mode"/>
-                            <p:selectOneMenu id="mode" value="#{pendingStickerRequestController.stickerRequest.modeOfPayment}" required="true">
-                                <f:selectItems value="#{commonOption.modeOfPayment()}" var="m" itemLabel="#{m.label}" itemValue="#{m}"/>
-                            </p:selectOneMenu>
+                            <p:inputText id="mode" value="#{pendingStickerRequestController.stickerRequest.modeOfPayment}" required="true" disabled="true"/>
+                                
                         </div>
                     </div>
                     <div class="col-6">
@@ -152,7 +157,9 @@
                     <div class="col-6">
                         <div class="field">
                             <p:outputLabel value="Payment Date" for="date"/>
-                            <p:calendar id="date" value="#{pendingStickerRequestController.stickerRequest.dateOfPayment}" pattern="dd-MM-yyyy"/>
+                            <p:inputText id="date" value="#{pendingStickerRequestController.stickerRequest.dateOfPayment}"  readonly="true">
+                                <f:convertDateTime pattern="dd-MM-yyyy"/>
+                            </p:inputText>
                         </div>
                     </div>
                 </div>

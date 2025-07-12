@@ -8,10 +8,15 @@ import com.indexgenesys.mid.abstracts.MidMethods;
 import com.indexgenesys.mid.common.Variable;
 import com.indexgenesys.mid.entity.EntityModel;
 import com.indexgenesys.mid.entity.enums.StickerRequestStatus;
+import com.indexgenesys.mid.entity.enums.StickerStatus;
+import com.indexgenesys.mid.entity.sticker.StickerInformation;
 import com.indexgenesys.mid.entity.sticker.StickerRequest;
+import com.indexgenesys.mid.security.ChecksumUtil;
 import com.indexgenesys.mid.service.IdGenerator;
 import com.indexgenesys.mid.service.MidService;
 import com.indexgenesys.mid.util.JSF;
+import com.indexgenesys.mid.util.SerialNumberGenerator;
+import com.indexgenesys.mid.util.StickerNumberGenerator;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 
@@ -88,8 +93,11 @@ public class PendingStickerRequestController implements Serializable, MidMethods
     @Override
     public void saveMethod() {
         idGenerator.uniqueEntityId(stickerRequest);
-        
+
         if (stickerRequestFacade.save(stickerRequest) != null) {
+            if (stickerRequest.getRequestStatus() == StickerRequestStatus.APPROVED) {
+                generateSticker(stickerRequest.getQuantity(), stickerRequest);
+            }
             clearMethod();
             JSF.addSuccessMessage(Variable.saveSuccess);
         } else {
@@ -107,6 +115,28 @@ public class PendingStickerRequestController implements Serializable, MidMethods
     @Override
     public void editMethod(EntityModel em) {
         stickerRequest = (StickerRequest) em;
+    }
+
+    public void approveMethod(StickerRequest em) {
+        em.setRequestStatus(StickerRequestStatus.APPROVED);
+        if (stickerRequestFacade.save(em) != null) {
+            generateSticker(em.getQuantity(), em);
+            clearMethod();
+            JSF.addSuccessMessage(Variable.saveSuccess);
+        } else {
+            JSF.addErrorMessage(Variable.saveError);
+        }
+
+    }
+
+    public void cancelMethod(StickerRequest em) {
+        em.setRequestStatus(StickerRequestStatus.CANCELLED);
+        if (stickerRequestFacade.save(em) != null) {
+            clearMethod();
+            JSF.addSuccessMessage(Variable.saveSuccess);
+        } else {
+            JSF.addErrorMessage(Variable.saveError);
+        }
     }
 
     @Override
@@ -157,6 +187,29 @@ public class PendingStickerRequestController implements Serializable, MidMethods
 
     public void prepareNew() {
         stickerRequest = new StickerRequest();
+
+    }
+
+    public void generateSticker(int count, StickerRequest request) {
+        List<StickerInformation> informationsList = new ArrayList<>();
+        for (int i = 1; i <= count; i++) {
+            StickerInformation dto = new StickerInformation();
+            generateStickerNoHash(dto, request);
+            dto.setStickerStatus(StickerStatus.GENERATED);
+            dto.setCompanyInformation(request.getCompanyInformation());
+            dto.setStickerBatch(request.getStickerBatch());
+            StickerInformation save = stickerRequestFacade.save(dto);
+            informationsList.add(save);
+        }
+        //stickerRequestFacade.saveAll(informationsList);
+
+    }
+
+    public void generateStickerNoHash(StickerInformation sticker, StickerRequest sr) {
+        sticker.setSerialNumber(SerialNumberGenerator.generateFromHash());
+        sticker.setStickerNumber(StickerNumberGenerator.generateStickerNumber(sr.getCompanyInformation().getCompanyCode(), sr.getStickerBatch().getBatchCode()));
+        sticker.setCheckSum(ChecksumUtil.generateSHA256ShortChecksum(sticker.getSerialNumber()));
+        //sticker.setId(sticker.getSerialNumber()); 
 
     }
 

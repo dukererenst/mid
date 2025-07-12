@@ -8,10 +8,15 @@ import com.indexgenesys.mid.abstracts.MidMethods;
 import com.indexgenesys.mid.common.Variable;
 import com.indexgenesys.mid.entity.EntityModel;
 import com.indexgenesys.mid.entity.enums.StickerRequestStatus;
+import com.indexgenesys.mid.entity.enums.StickerStatus;
+import com.indexgenesys.mid.entity.sticker.StickerInformation;
 import com.indexgenesys.mid.entity.sticker.StickerRequest;
+import com.indexgenesys.mid.security.ChecksumUtil;
 import com.indexgenesys.mid.service.IdGenerator;
 import com.indexgenesys.mid.service.MidService;
 import com.indexgenesys.mid.util.JSF;
+import com.indexgenesys.mid.util.SerialNumberGenerator;
+import com.indexgenesys.mid.util.StickerNumberGenerator;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 
@@ -88,7 +93,7 @@ public class ApprovedStickerRequestController implements Serializable, MidMethod
     @Override
     public void saveMethod() {
         idGenerator.uniqueEntityId(stickerRequest);
-        
+
         if (stickerRequestFacade.save(stickerRequest) != null) {
             clearMethod();
             JSF.addSuccessMessage(Variable.saveSuccess);
@@ -153,6 +158,27 @@ public class ApprovedStickerRequestController implements Serializable, MidMethod
                 return results;
             }
         };
+    }
+
+    public void generateSticker(int count, StickerRequest request) {
+        List<StickerInformation> informationsList = new ArrayList<>();
+        for (int i = 1; i <= count; i++) {
+            StickerInformation dto = new StickerInformation();
+            generateStickerNoHash(dto, request);
+            dto.setStickerStatus(StickerStatus.GENERATED);
+            dto.setCompanyInformation(request.getCompanyInformation());
+            dto.setStickerBatch(request.getStickerBatch());
+            informationsList.add(dto);
+        }
+
+    }
+
+    public void generateStickerNoHash(StickerInformation sticker, StickerRequest sr) {
+        sticker.setSerialNumber(SerialNumberGenerator.generateFromHash());
+        sticker.setStickerNumber(StickerNumberGenerator.generateStickerNumber(sr.getCompanyInformation().getCompanyCode(), sr.getStickerBatch().getBatchCode()));
+        sticker.setCheckSum(ChecksumUtil.generateSHA256ShortChecksum(sticker.getSerialNumber()));
+        //sticker.setId(sticker.getSerialNumber()); 
+
     }
 
     public void prepareNew() {

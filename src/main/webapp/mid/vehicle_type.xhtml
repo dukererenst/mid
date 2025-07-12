@@ -39,8 +39,7 @@
 
                         <p:commandButton value="Submit" styleClass="mr-2 mb-2" action="#{vehicleTypeController.saveMethod()}" ajax="false"/>
                         <p:commandButton value="Clear" styleClass="ui-button-danger" action="#{vehicleTypeController.clearMethod()}" ajax="false" 
-                                         immediate="true"
-                                         update="vehicleTypeForm" process="@form"/>
+                                         ajax="true" update="@form" process="@this"/>
 
                     </h:form>
 

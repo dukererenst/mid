@@ -14,16 +14,14 @@
             <div class="grid">
                 <div class="col-6 md:col-6">
 
-                    <h:form id="vehicleModelForm">
+                    <h:form id="vehicleModelForm" >
                         <p:growl/>
                         <div class="formgrid grid ui-fluid">
                             <div class="col-12 md:col-6">
                                 <div class="field">
                                     <p:outputLabel for="vmake">Vehicle Make Name</p:outputLabel>
-                                    <p:selectOneMenu id="vmake" value="#{vehicleModelController.vehicleModel.vehicleMake}" required="true" requiredMessage="Required">
-                                      
-                                        <f:selectItems value="#{commonOption.vehicleMakeList()}" 
-                                                       />
+                                    <p:selectOneMenu id="vmake" value="#{vehicleModelController.vehicleModel.vehicleMake}" required="true" requiredMessage="Required" >
+                                        <f:selectItems value="#{commonOption.vehicleMakeList()}"/>
                                     </p:selectOneMenu>
                                 </div> 
 
@@ -43,13 +41,11 @@
 
                             </div> 
 
-
-
-
                         </div>
 
                         <p:commandButton value="Submit" styleClass="mr-2 mb-2" action="#{vehicleModelController.saveMethod()}" ajax="false"/>
-                        <p:commandButton value="Clear" styleClass="ui-button-danger" action="#{vehicleModelController.clearMethod()}" ajax="false" immediate="true"/>
+                       <p:commandButton value="Clear" styleClass="ui-button-danger" action="#{vehicleModelController.clearMethod()}" ajax="true" update="@form" process="@this"/>
+
 
                     </h:form>
 
@@ -61,8 +57,7 @@
                     <h:form id="vehicleModelList">
                         <p:growl id="deleted"/>
                         <p:dataTable widgetVar="sectorDT" value="#{vehicleModelController.vehicleModelsList}" var="cate" paginator="true" rows="10" reflow="true" 
-                                     paginatorPosition="bottom" 
-                                     selection="#{vehicleModelController.vehicleModel}" rowKey="#{cate.id}" selectionMode="single">
+                                     paginatorPosition="bottom" >
 
                             <p:column headerText="Vehicle Model Name"  >
                                 <h:outputLabel value="#{cate.vehicleModelName}"/>
