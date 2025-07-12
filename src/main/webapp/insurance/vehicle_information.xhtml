@@ -11,31 +11,33 @@
         <div class="card">
             <h5>Vehicle Information</h5>
             <hr/>
-            <div class="grid">
+            <div class="grid ui-fluid">
                 <div class="col-12 md:col-12">
                     <h:form id="vehicleInfoTableForm" prependId="false">
                         <p:growl id="msgs" showDetail="true" life="5000" />
                         <div class="flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
 
-                          <div class="grid mb-3">
+                          <div class="grid mb-3 ui-fluid">
                                 <div class="col-12 md:col-8">
-                                    <div class="grid mb-3">
+                                    <div class="grid mb-3 ui-fluid">
                                         <div class="col-12 md:col-4">
                                             <p:selectOneMenu id="searchBy" style="width: 100%;">
                                                 <f:selectItem itemLabel="SELECT ONE" itemValue="#{null}" />
                                             </p:selectOneMenu>
                                         </div>
                                         <div class="col-12 md:col-4">
+                                            <div class="field">
                                             <p:inputText placeholder="Search Value"/>
+                                            </div>
                                         </div>
-                                        <div class="col-12 md:col-2 flex align-items-end">
+                                        <div class="col-12 md:col-2">
                                             <p:commandButton value="Search"
                                                              action="#{stickerInformationController.findAll}"
                                                              ajax="false"
                                                              icon="pi pi-search"
                                                              styleClass="p-button-sm w-full" />
                                         </div>
-                                        <div class="col-12 md:col-2 flex align-items-end">
+                                        <div class="col-12 md:col-2 ">
                                             <p:commandButton value="New Company" icon="pi pi-plus"
                                                              styleClass="ui-button-success"
                                                              action="#{companyCustomerController.prepareNewCustomer}"
