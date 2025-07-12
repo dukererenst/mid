@@ -1,0 +1,117 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Vehicle Insurance Wizard</ui:define>
+
+    <ui:define name="viewname">
+        <li><p:link outcome="/dashboard">Insurance Calculator</p:link></li>
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="card">
+            <h5>Calculate Your Vehicle Insurance</h5>
+            <hr/>
+
+            <h:form id="wizForm" prependId="false">
+                <p:wizard widgetVar="wiz" flowListener="#{vehicleInsuranceController.onFlowProcess}">
+                    <!-- Step 1: Vehicle & Cover -->
+                    <p:tab id="step1" title="Vehicle Info">
+                        <h:panelGrid columns="2" columnClasses="label,value" styleClass="ui-fluid formgrid grid">
+                            <div class="field col-12 md:col-6">
+                                <p:outputLabel for="vehicleValue" value="Vehicle Value (GH₵)" />
+                                <p:inputNumber id="vehicleValue" value="#{vehicleInsuranceController.vehicleValue}"
+                                               mode="currency" currencySymbol="GH₵" minValue="0"
+                                               required="true" />
+                            </div>
+                            <div class="field col-12 md:col-6">
+                                <p:outputLabel for="comprehensive" value="Comprehensive Cover?" />
+                                <p:selectBooleanCheckbox id="comprehensive"
+                                                         value="#{vehicleInsuranceController.comprehensive}" />
+                            </div>
+                            <div class="field col-12 md:col-6">
+                                <p:outputLabel for="noClaim" value="No-Claim Discount (%)" />
+                                <p:inputNumber id="noClaim"
+                                               value="#{vehicleInsuranceController.noClaimDiscount}"
+                                               minValue="0" maxValue="100"
+                                               required="true" />
+                            </div>
+                        </h:panelGrid>
+                    </p:tab>
+
+                    <!-- Step 2: Risk & Engine -->
+                    <p:tab id="step2" title="Risk & Engine">
+                        <h:panelGrid columns="2" styleClass="ui-fluid formgrid grid">
+                            <div class="field col-12 md:col-6">
+                                <p:outputLabel for="riskCategory" value="Risk Category" />
+                                <p:selectOneMenu id="riskCategory"
+                                                 value="#{vehicleInsuranceController.riskCategory}"
+                                                 required="true">
+                                    <f:selectItem itemLabel="-- Select --" itemValue="" />
+                                    <f:selectItems value="#{vehicleInsuranceController.riskCategories}" />
+                                </p:selectOneMenu>
+                            </div>
+                            <div class="field col-12 md:col-6">
+                                <p:outputLabel for="engineCapacity" value="Engine Capacity (cc)" />
+                                <p:inputNumber id="engineCapacity"
+                                               value="#{vehicleInsuranceController.engineCapacityCc}"
+                                               minValue="0" required="true" />
+                            </div>
+                            <div class="field col-12 md:col-6">
+                                <p:outputLabel for="seats" value="Number of Seats" />
+                                <p:inputNumber id="seats"
+                                               value="#{vehicleInsuranceController.numberOfSeats}"
+                                               minValue="1" required="true" />
+                            </div>
+                            <div class="field col-12 md:col-6">
+                                <p:outputLabel for="term" value="Policy Term (Months)" />
+                                <p:inputNumber id="term"
+                                               value="#{vehicleInsuranceController.policyTermMonths}"
+                                               minValue="1" maxValue="12" required="true" />
+                            </div>
+                        </h:panelGrid>
+                    </p:tab>
+
+                    <!-- Step 3: Add-Ons -->
+                    <p:tab id="step3" title="Add-Ons">
+                        <h:panelGrid columns="2" styleClass="ui-fluid formgrid grid">
+                            <div class="field col-12 md:col-6">
+                                <p:selectBooleanCheckbox id="passAcc"
+                                                         value="#{vehicleInsuranceController.includePassengerAcc}" />
+                                <p:outputLabel for="passAcc" value="Passenger Accident Cover" />
+                            </div>
+                            <div class="field col-12 md:col-6">
+                                <p:selectBooleanCheckbox id="roadAssist"
+                                                         value="#{vehicleInsuranceController.includeRoadsideAssist}" />
+                                <p:outputLabel for="roadAssist" value="Roadside Assistance" />
+                            </div>
+                        </h:panelGrid>
+                    </p:tab>
+
+                    <!-- Step 4: Review & Calculate -->
+                    <p:tab id="step4" title="Review">
+                        <h:panelGrid columns="1" styleClass="ui-fluid">
+                            <h:outputText value="Please review your inputs before calculating." />
+                            <p:commandButton value="Calculate Premium"
+                                             icon="pi pi-check"
+                                             actionListener="#{vehicleInsuranceController.calculate}"
+                                             update=":wizForm:resultPanel"
+                                             oncomplete="PF('wiz').next()" />
+                        </h:panelGrid>
+                    </p:tab>
+
+                    <!-- Step 5: Result -->
+                    <p:tab id="step5" title="Result">
+                        <h:panelGrid id="resultPanel" columns="1" styleClass="ui-fluid">
+                            <h:outputLabel value="Total Premium (GH₵):" />
+                            <h:outputText value="#{vehicleInsuranceController.totalPremium}" style="font-weight:bold"/>
+                        </h:panelGrid>
+                    </p:tab>
+                </p:wizard>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

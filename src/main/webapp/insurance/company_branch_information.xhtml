@@ -1,0 +1,144 @@
+<ui:composition template="/WEB-INF/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">Company Branch Management</ui:define>
+    <ui:define name="content">
+
+        <div class="card">
+            <h5>Company Branch Information</h5>
+            <hr/>
+            <div class="grid">
+                <div class="col-6 md:col-6">
+
+                    <h:form id="insuranceCompanyBranchForm">
+                        <p:growl/>
+                        <div class="formgrid grid ui-fluid">
+                             <div class="col-12 md:col-6">
+                                <div class="field">
+                                    <p:outputLabel for="compName">Company</p:outputLabel>
+                                    <p:selectOneMenu id="compName" value="#{companyBranchInformationController.insuranceCompanyBranch.insuranceCompany}"  alwaysDisplayLabel="true" filter="true"
+                                                     appendTo="cType" required="true" requiredMessage="Required"  filterMatchMode="contains">
+                                        <f:selectItems value="#{commonOption.insuranceCompanysList()}"/>
+                                    </p:selectOneMenu>
+                                </div> 
+
+                            </div> 
+                            <div class="col-12 md:col-6">
+                                <div class="field">
+                                    <p:outputLabel for="cName">Branch Name</p:outputLabel>
+                                    <p:inputText id="cName" type="text" value="#{companyBranchInformationController.insuranceCompanyBranch.branchName}" required="true" requiredMessage="Required"/>
+                                </div> 
+
+                            </div>  
+                           <div class="col-12 md:col-6">
+                                <div class="field">
+                                    <p:outputLabel for="telephone">Telephone</p:outputLabel>
+                                    <p:inputText id="telephone" type="text" value="#{companyBranchInformationController.insuranceCompanyBranch.telephone}" required="true" requiredMessage="Required"/>
+                                </div>      
+
+                            </div>  
+                            <div class="col-12 md:col-6">
+                                <div class="field">
+                                    <p:outputLabel for="cType">Region</p:outputLabel>
+                                    <p:selectOneMenu id="cType" value="#{companyBranchInformationController.insuranceCompanyBranch.region}"  alwaysDisplayLabel="true" filter="true"
+                                                     appendTo="cType" required="true" requiredMessage="Required"  filterMatchMode="contains">
+                                        <f:selectItems value="#{commonOption.regionList()}"/>
+                                    </p:selectOneMenu>
+                                </div> 
+
+                            </div>  
+                            <div class="col-12 md:col-6">
+                                <div class="field">
+                                    <p:outputLabel for="managerName">Manager Name</p:outputLabel>
+                                    <p:inputText id="managerName" type="text" value="#{companyBranchInformationController.insuranceCompanyBranch.managerName}" required="true" requiredMessage="Required"/>
+                                </div>      
+
+                            </div> 
+                            
+                            <div class="col-12 md:col-6">
+                                <div class="field">
+                                    <p:outputLabel for="city">City</p:outputLabel>
+                                    <p:inputText id="city" type="text" value="#{companyBranchInformationController.insuranceCompanyBranch.city}" required="true" requiredMessage="Required"/>
+                                </div>      
+
+                            </div> 
+                            
+                            <div class="col-12 md:col-6">
+                                <div class="field">
+                                    <p:outputLabel for="location">Address</p:outputLabel>
+                                    <p:inputText id="location" type="text" value="#{companyBranchInformationController.insuranceCompanyBranch.address}" required="true" requiredMessage="Required"/>
+                                </div>      
+
+                            </div> 
+                            <div class="col-12 md:col-6">
+                                <div class="field">
+                                    <p:outputLabel for="status">Status</p:outputLabel>
+                                    <p:selectBooleanCheckbox id="status" itemLabel="Active" label="Active"  value="#{companyBranchInformationController.insuranceCompanyBranch.active}" required="true" requiredMessage="Required"/>
+                                </div>      
+
+                            </div> 
+
+
+
+                        </div>
+
+                        <p:commandButton value="Submit" styleClass="mr-2 mb-2" action="#{companyBranchInformationController.saveMethod()}" ajax="false"/>
+                        <p:commandButton value="Clear" styleClass="ui-button-danger" action="#{companyBranchInformationController.clearMethod()}" ajax="false" immediate="true"/>
+
+                    </h:form>
+
+                </div>
+                <div class="col-6 md:col-6">
+
+                    <h5>Company Branch List</h5>
+
+                    <h:form id="companyForm">
+
+                        <p:dataTable widgetVar="sectorDT" value="#{companyBranchInformationController.insuranceCompanyBranchsList}" var="insuranceCompanyBranch" paginator="true" rows="10" reflow="true" 
+                                     paginatorPosition="bottom" 
+                                     selection="#{companyBranchInformationController.insuranceCompanyBranch}" rowKey="#{insuranceCompanyBranch.id}" selectionMode="single">
+
+                            <p:column headerText="Company Name"  >
+                                <h:outputLabel value="#{insuranceCompanyBranch.insuranceCompany.companyName}"/>
+                            </p:column>
+                             <p:column headerText="Company Type">
+                                 <h:outputLabel value="#{insuranceCompanyBranch.insuranceCompany.companyType}"/>
+                            </p:column>
+                            <p:column headerText="Branch Name">
+                                <h:outputLabel value="#{insuranceCompanyBranch.branchName}"/>
+                            </p:column>
+                            <p:column headerText="Telephone No">
+                                <h:outputLabel value="#{insuranceCompanyBranch.telephone}"/>
+                            </p:column>
+                           
+                            <p:column headerText="Action">
+                                 <p:commandButton value="Edit" icon="pi pi-pencil" action="#{companyBranchInformationController.editMethod(insuranceCompanyBranch)}" ajax="false"/>  |
+                                <p:commandButton value="Del" icon="pi pi-trash" styleClass="ui-button-danger"
+                                                 oncomplete="PF('dlg').show()"
+                                                 actionListener="#{companyBranchInformationController.setCompanyInformationToDelete(insuranceCompanyBranch)}" 
+                                                 process="@this"/>
+                            </p:column>
+
+                        </p:dataTable>
+                        <p:confirmDialog message="Are you sure you want to delete?" header="Confirmation" id="dlg" widgetVar="dlg">
+                            <p:commandButton value="Yes"
+                                             action="#{companyBranchInformationController.deleteMethod(companyBranchInformationController.companyInformationToDelete)}"
+                                             update="@form"
+                                             oncomplete="PF('dlg').hide()" />
+                            <p:commandButton value="No"
+                                             onclick="PF('dlg').hide()"
+                                             type="button" />
+                        </p:confirmDialog>
+
+                    </h:form>
+                </div>
+            </div>
+        </div>
+
+
+    </ui:define>
+</ui:composition>

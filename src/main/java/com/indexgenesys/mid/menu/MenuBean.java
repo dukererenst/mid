@@ -57,13 +57,12 @@ public class MenuBean implements Serializable {
                             new MenuNode("Short Rates", "pi pi-id-card", "/mid/short_rate", null),
                             new MenuNode("Product", "pi pi-id-card", "/mid/product", null)
                     )),
-                     new MenuNode("Customer", "pi pi-cog", null, List.of(
+                    new MenuNode("Customer", "pi pi-cog", null, List.of(
                             new MenuNode("Vehicle Information", "pi pi-users", "/mid/vehicle_information", null),
                             new MenuNode("Individual Information", "pi pi-id-card", "/mid/individual_customer", null),
                             new MenuNode("Company Information", "pi pi-id-card", "/mid/company_customer", null)
-                            
                     )),
-                     new MenuNode("Policy", "pi pi-cog", null, List.of(
+                    new MenuNode("Policy", "pi pi-cog", null, List.of(
                             new MenuNode("Vehicle Information", "pi pi-users", "/mid/vehicle_information", null),
                             new MenuNode("Individual Customer Information", "pi pi-id-card", "/mid/individual_customer", null),
                             new MenuNode("Company Customer Information", "pi pi-id-card", "/mid/individual_customer", null),
@@ -72,7 +71,7 @@ public class MenuBean implements Serializable {
                             new MenuNode("Approved Policy", "pi pi-users", "/dashboard", null),
                             new MenuNode("Policy Sticker", "pi pi-id-card", "/dashboard", null)
                     )),
-                     new MenuNode("Sticker", "pi pi-cog", null, List.of(
+                    new MenuNode("Sticker", "pi pi-cog", null, List.of(
                             new MenuNode("Sticker Batch", "pi pi-users", "/sticker/sticker_batch", null),
                             new MenuNode("Sticker Request", "pi pi-id-card", "/sticker/sticker_request", null),
                             new MenuNode("Pending Request", "pi pi-users", "/sticker/pending_sticker_request", null),
@@ -80,10 +79,17 @@ public class MenuBean implements Serializable {
                             new MenuNode("Inventory", "pi pi-users", "/sticker/sticker_information", null),
                             new MenuNode("Issued Sticker", "pi pi-id-card", "/dashboard", null)
                     )),
-                     new MenuNode("NIA", "pi pi-cog", null, List.of(
+                    new MenuNode("NIA", "pi pi-cog", null, List.of(
                             new MenuNode("Verification", "pi pi-users", "/nia/verification", null),
                             new MenuNode("Verification Search", "pi pi-id-card", "/setting/company_information", null)
-                            
+                    )),
+                    new MenuNode("Insurance Company", "pi pi-cog", null, List.of(
+                            new MenuNode("Company Customer Information", "pi pi-users", "/nia/verification", null),
+                            new MenuNode("Indvidual Company", "pi pi-id-card", "/setting/company_information", null),
+                            new MenuNode("Indvidual Policy", "pi pi-id-card", "/setting/company_information", null),
+                            new MenuNode("Create Policy", "pi pi-id-card", "/setting/company_information", null),
+                            new MenuNode("Pending Policy", "pi pi-id-card", "/setting/company_information", null),
+                             new MenuNode("Policy Sticker", "pi pi-id-card", "/setting/company_information", null)
                     ))
             )),
             new MenuNode("Reports", "pi pi-file", "/dashboard", null)
@@ -278,7 +284,6 @@ public class MenuBean implements Serializable {
                     .value(node.getLabel())
                     .icon(node.getIcon())
                     .ajax(true)
-                    
                     .outcome(node.getOutcome())
                     .build();
         } else {
