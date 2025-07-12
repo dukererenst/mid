@@ -14,26 +14,60 @@
 
             <h:form id="stickerForm" prependId="false">
                 <p:growl id="msgs" showDetail="true" life="4000"/>
+                <div class="grid mb-3">
+                    <div class="col-12 md:col-8">
+            <div class="grid mb-3">
 
-                <div class="flex justify-content-between align-items-center mb-3">
-                    <p:commandButton value="New Sticker" icon="pi pi-plus" styleClass="ui-button-success"
-                                     action="#{stickerInformationController.prepareNew()}"
-                                     update=":dialogForm" oncomplete="PF('dialog').show()" />
+        <!-- Company Select -->
+        <div class="col-12 md:col-4">
+            <p:outputLabel for="companySelect" value="Insurance Company" />
+            <p:selectOneMenu id="companySelect"
+                             value="#{stickerInformationController.companyInformation}"
+                             style="width: 100%;">
+                <f:selectItem itemLabel="SELECT ONE" itemValue="#{null}" />
+                <f:selectItems value="#{commonOption.insuranceCompanysList()}" var="company"
+                               itemLabel="#{company.companyName}" itemValue="#{company}" />
+            </p:selectOneMenu>
+        </div>
 
-                    <div class="p-input-icon-left">
-                        <i class="pi pi-search"/>
-                        <p:inputText id="globalFilter" onkeyup="PF('stickersTable').filter()"
-                                     placeholder="Search all fields..." styleClass="w-full"/>
-                    </div>
-                </div>
+        <!-- Sticker Status Select -->
+        <div class="col-12 md:col-4">
+            <p:outputLabel for="statusSelect" value="Sticker Status" />
+            <p:selectOneMenu id="statusSelect"
+                             value="#{stickerInformationController.stickerStatus}"
+                             style="width: 100%;">
+                <f:selectItem itemLabel="SELECT ONE" itemValue="#{null}" />
+                <f:selectItems value="#{commonOption.stickerStatus()}" var="status"
+                               itemLabel="#{status.label}" itemValue="#{status}" />
+            </p:selectOneMenu>
+        </div>
 
-                <p:dataTable id="stickersTable" var="sticker" value="#{stickerInformationController.lazyRequests}"
-                             lazy="true"
+        <!-- Load Button -->
+        <div class="col-12 md:col-2 flex align-items-end">
+            <p:commandButton value="Load Sticker"
+                             action="#{stickerInformationController.findAll}"
+                             ajax="false"
+                             icon="pi pi-search"
+                             styleClass="p-button-sm w-full" />
+        </div>
+        <div class="col-12 md:col-2 flex align-items-end">
+            <p:commandButton value="Summary"
+                             action="#{stickerInformationController.findAll}"
+                             ajax="false"
+                             icon="pi pi-search"
+                             styleClass="p-button-sm w-full" />
+        </div>
+            </div>
+            </div>
+
+    </div>
+                <p:dataTable id="stickersTable" var="sticker" value="#{stickerInformationController.stickerInformationsList}"
+                             lazy="false"
                              paginatorPosition="bottom"
                              paginator="true" rows="10" widgetVar="stickersTable"
                              rowKey="#{sticker.id}" selection="#{stickerInformationController.filteredRequests}"
                              filteredValue="#{stickerInformationController.filteredList}"
-                             globalFilter="globalFilter">
+                             >
 
                     <p:column headerText="Sticker No" filterBy="#{sticker.stickerNumber}">
                         <h:outputText value="#{sticker.stickerNumber}" />
@@ -140,15 +174,14 @@
             <!-- QR Dialog -->
             <p:dialog header="QR Code" widgetVar="qrDialog" modal="true" appendTo="@(body)" id="qrDialog">
                 <h:form id="qrDialogForm" prependId="false">
-                    <p:graphicImage id="qrImage" value="#{stickerInformationController.base64QRCode}" 
-                                    rendered="#{not empty stickerInformationController.base64QRCode}" 
-                                    alt="QR Code" width="200" height="200"
-                                    cache="false" 
-                                    stream="false" 
-                                    name="qr.png"
-                                    library="images"
-                                    style="display:block; margin:auto;"
-                                    />
+                   <h:panelGroup rendered="#{not empty stickerInformationController.base64QRCode}">
+    <iframe src="#{stickerInformationController.base64QRCode}" 
+            width="100%" 
+            height="500px"
+            style="border:none;">
+    </iframe>
+</h:panelGroup>
+
                     <p:spacer height="10"/>
                     <p:commandButton value="Download PDF" icon="pi pi-file-pdf"
                                      action="#{stickerInformationController.exportQRCodeToPdf()}"

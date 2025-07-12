@@ -29,8 +29,6 @@ import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.ImageOutputStream;
 import static javax.print.attribute.ResolutionSyntax.DPI;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.io.FileUtils;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.CaptureEvent;

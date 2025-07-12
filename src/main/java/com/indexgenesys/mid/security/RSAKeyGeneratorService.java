@@ -8,12 +8,6 @@ package com.indexgenesys.mid.security;
  *
  * @author ernest
  */
-import java.io.FileOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.security.*;
-
-import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.KeyPair;

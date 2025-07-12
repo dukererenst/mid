@@ -13,10 +13,12 @@
 	<parameter name="validTo" class="java.util.Date"/>
 	<parameter name="qrCodeImage" class="java.awt.Image"/>
 	<parameter name="backgroundImage" class="java.awt.Image"/>
-	<background height="200">
+	<background>
+<band height="200">
 		<element kind="image" uuid="21a143dd-36c3-42bc-a93d-67a3a3e2d809" x="0" y="0" width="300" height="200" scaleImage="FillFrame" hImageAlign="Center" vImageAlign="Middle">
 			<expression><![CDATA[$P{backgroundImage}]]></expression>
 		</element>
+</band>
 	</background>
 	<detail>
 		<band height="200">

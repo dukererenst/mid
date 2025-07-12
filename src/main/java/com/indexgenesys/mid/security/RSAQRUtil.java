@@ -10,6 +10,11 @@ package com.indexgenesys.mid.security;
  */
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.*;
@@ -84,7 +89,9 @@ public class RSAQRUtil {
 
     // Load public key from PEM
     private static PublicKey loadPublicKey() throws Exception {
-        String key = new String(Files.readAllBytes(Paths.get(PUBLIC_KEY_FILE)))
+//        String key = new String(Files.readAllBytes(Paths.get(PUBLIC_KEY_FILE)))
+        File fileFromResource = getFileFromResource(PUBLIC_KEY_FILE);
+        String key = new String(Files.readAllBytes(Paths.get(fileFromResource.getAbsolutePath())))
                 .replaceAll("-----BEGIN PUBLIC KEY-----", "")
                 .replaceAll("-----END PUBLIC KEY-----", "")
                 .replaceAll("\\s+", "");
@@ -96,7 +103,9 @@ public class RSAQRUtil {
 
     // Load private key from PEM
     private static PrivateKey loadPrivateKey() throws Exception {
-        String key = new String(Files.readAllBytes(Paths.get(PRIVATE_KEY_FILE)))
+//        String key = new String(Files.readAllBytes(Paths.get(PRIVATE_KEY_FILE)))
+        File fileFromResource = getFileFromResource(PRIVATE_KEY_FILE);
+        String key = new String(Files.readAllBytes(Paths.get(fileFromResource.getAbsolutePath())))
                 .replaceAll("-----BEGIN PRIVATE KEY-----", "")
                 .replaceAll("-----END PRIVATE KEY-----", "")
                 .replaceAll("\\s+", "");
@@ -106,7 +115,23 @@ public class RSAQRUtil {
         return factory.generatePrivate(spec);
     }
 
-   
+    public static File getFileFromResource(String path) throws IOException {
+        InputStream inputStream = RSAQRUtil.class.getClassLoader().getResourceAsStream(path);
+        if (inputStream == null) {
+            throw new FileNotFoundException("Resource not found: " + path);
+        }
+
+        File tempFile = File.createTempFile("temp_", null);
+        tempFile.deleteOnExit();
+        try (FileOutputStream out = new FileOutputStream(tempFile)) {
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) != -1) {
+                out.write(buffer, 0, length);
+            }
+        }
+        return tempFile;
+    }
 
 //    public static void main(String[] args) {
 //        RSAQRUtil  aQRUtil = new RSAQRUtil();
