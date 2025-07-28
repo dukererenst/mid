@@ -5,23 +5,218 @@
                 xmlns:f="jakarta.faces.core"
                 xmlns:p="http://primefaces.org/ui">
 
-    <ui:define name="title">Individual Policy Management</ui:define>
+    <ui:define name="title">Policy Management</ui:define>
+
     <ui:define name="content">
         <div class="card">
-            <h5>Create Policy Information</h5>
+            <h5>Policy Management</h5>
             <hr/>
-            <p:wizard>
-                <p:tab title="Risk Category">
-                    
-                </p:tab>
-                 <p:tab title="Personal Information">
-                    
-                </p:tab>
-                 <p:tab title="Vehicle Information">
-                    
-                </p:tab>
-            </p:wizard>
+
+            <h:form id="policyForm" prependId="false">
+                <p:growl id="msgs" showDetail="true" life="5000" />
+
+                <div class="flex justify-content-end mb-3">
+                    <p:commandButton value="New Policy" icon="pi pi-plus"
+                                     action="#{policyController.prepareNew}"
+                                     update=":policyDialogForm"
+                                     oncomplete="PF('policyDialog').show()"
+                                     styleClass="p-button-success" />
+                </div>
+
+                <p:dataTable id="policyTable"
+                             var="policy"
+                             value="#{policyController.lazyPolicies}"
+                             paginator="true"
+                             rows="10"
+                             lazy="true"
+                             filteredValue="#{policyController.filteredPolicies}"
+                             rowKey="#{policy.id}">
+
+                    <p:column headerText="Policy #" filterBy="#{policy.policyNumber}" filterMatchMode="contains">
+                        #{policy.policyNumber}
+                    </p:column>
+                    <p:column headerText="Customer">
+                        #{policy.customer.fullName}
+                    </p:column>
+                    <p:column headerText="Vehicle">
+                        #{policy.vehicle.plateNumber}
+                    </p:column>
+                    <p:column headerText="Type">
+                        #{policy.policyType.name}
+                    </p:column>
+                    <p:column headerText="Start Date">
+                        <h:outputText value="#{policy.startDate}">
+                            <f:convertDateTime pattern="yyyy-MM-dd" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="End Date">
+                        <h:outputText value="#{policy.endDate}">
+                            <f:convertDateTime pattern="yyyy-MM-dd" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Total Amount" filterBy="#{policy.totalAmount}">
+                        <h:outputText value="#{policy.totalAmount}">
+                            <f:convertNumber type="currency" currencySymbol="$" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Active">
+                        <p:tag value="#{policy.active ? 'Yes' : 'No'}"
+                               severity="#{policy.active ? 'success' : 'danger'}" />
+                    </p:column>
+                    <p:column headerText="Actions">
+                        <p:commandButton icon="pi pi-pencil" title="Edit"
+                                         actionListener="#{policyController.edit(policy)}"
+                                         update=":policyDialogForm"
+                                         oncomplete="PF('policyDialog').show()" />
+                        <p:commandButton icon="pi pi-trash" title="Delete"
+                                         actionListener="#{policyController.delete(policy)}"
+                                         update="@form"
+                                         onclick="return confirm('Are you sure you want to delete this policy?');" />
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
+
+            <p:dialog header="Policy Details"
+                      widgetVar="policyDialog"
+                      modal="true"
+                      width="70vw"
+                      resizable="false"
+                      appendTo="@(body)">
+
+                <h:form id="policyDialogForm" prependId="false">
+                    <div class="grid ui-fluid">
+                        <div class="col-12 md:col-6">
+                            <h:outputLabel for="policyNumber" value="Policy Number:" />
+                            <p:inputText id="policyNumber"
+                                         value="#{policyController.selected.policyNumber}"
+                                         required="true" />
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <h:outputLabel for="customer" value="Customer:" />
+                            <p:selectOneMenu id="customer"
+                                             value="#{policyController.selected.customer}"
+                                             converter="omnifaces.SelectItemsConverter">
+                                <f:selectItem itemLabel="Select One" itemValue="#{null}" />
+                                <f:selectItems value="#{policyController.customers}" var="c"
+                                               itemLabel="#{c.fullName}"
+                                               itemValue="#{c}" />
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <h:outputLabel for="vehicle" value="Vehicle:" />
+                            <p:selectOneMenu id="vehicle"
+                                             value="#{policyController.selected.vehicle}"
+                                             converter="omnifaces.SelectItemsConverter">
+                                <f:selectItem itemLabel="Select One" itemValue="#{null}" />
+                                <f:selectItems value="#{policyController.vehicles}" var="v"
+                                               itemLabel="#{v.plateNumber}"
+                                               itemValue="#{v}" />
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <h:outputLabel for="policyType" value="Policy Type:" />
+                            <p:selectOneMenu id="policyType"
+                                             value="#{policyController.selected.policyType}"
+                                             converter="omnifaces.SelectItemsConverter">
+                                <f:selectItem itemLabel="Select One" itemValue="#{null}" />
+                                <f:selectItems value="#{policyController.policyTypes}" var="pt"
+                                               itemLabel="#{pt.name}"
+                                               itemValue="#{pt}" />
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <h:outputLabel for="startDate" value="Start Date:" />
+                            <p:calendar id="startDate"
+                                        value="#{policyController.selected.startDate}"
+                                        pattern="yyyy-MM-dd" 
+                                         />
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <h:outputLabel for="endDate" value="End Date:" />
+                            <p:calendar id="endDate"
+                                        value="#{policyController.selected.endDate}"
+                                        pattern="yyyy-MM-dd"
+                                         />
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <h:outputLabel for="premiumAmount" value="Premium Amount:" />
+                            <p:inputNumber id="premiumAmount"
+                                           value="#{policyController.selected.premiumAmount}"
+                                            minValue="0" />
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <h:outputLabel for="stampDuty" value="Stamp Duty:" />
+                            <p:inputNumber id="stampDuty"
+                                           value="#{policyController.selected.stampDuty}"
+                                            minValue="0" />
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <h:outputLabel for="levies" value="Levies:" />
+                            <p:inputNumber id="levies"
+                                           value="#{policyController.selected.levies}"
+                                            minValue="0" />
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <h:outputLabel for="totalAmount" value="Total Amount:" />
+                            <p:inputNumber id="totalAmount"
+                                           value="#{policyController.selected.totalAmount}"
+                                           minValue="0" />
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <h:outputLabel for="insuranceCompany" value="Insurance Company:" />
+                            <p:selectOneMenu id="insuranceCompany"
+                                             value="#{policyController.selected.insuranceCompany}"
+                                             converter="omnifaces.SelectItemsConverter">
+                                <f:selectItem itemLabel="Select One" itemValue="#{null}" />
+                                <f:selectItems value="#{policyController.insuranceCompanies}" var="ic"
+                                               itemLabel="#{ic.name}"
+                                               itemValue="#{ic}" />
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <h:outputLabel for="coverType" value="Cover Type:" />
+                            <p:selectOneMenu id="coverType"
+                                             value="#{policyController.selected.coverType}"
+                                             converter="omnifaces.SelectItemsConverter">
+                                <f:selectItem itemLabel="Select One" itemValue="#{null}" />
+                                <f:selectItems value="#{policyController.coverTypes}" var="ct"
+                                               itemLabel="#{ct.name}"
+                                               itemValue="#{ct}" />
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <h:outputLabel for="riskCategory" value="Risk Category:" />
+                            <p:selectOneMenu id="riskCategory"
+                                             value="#{policyController.selected.riskCategory}"
+                                             converter="omnifaces.SelectItemsConverter">
+                                <f:selectItem itemLabel="Select One" itemValue="#{null}" />
+                                <f:selectItems value="#{policyController.riskCategories}" var="rc"
+                                               itemLabel="#{rc.name}"
+                                               itemValue="#{rc}" />
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="col-12 md:col-6 flex align-items-center">
+                            <h:outputLabel for="active" value="Active:" />
+                            <p:selectBooleanCheckbox id="active"
+                                                     value="#{policyController.selected.active}" />
+                        </div>
+                    </div>
+
+                    <p:separator />
+
+                    <p:commandButton value="Save"
+                                     icon="pi pi-save"
+                                     actionListener="#{policyController.save}"
+                                     update=":policyForm :msgs"
+                                     oncomplete="PF('policyDialog').hide()" />
+                    <p:commandButton value="Cancel"
+                                     icon="pi pi-times"
+                                     type="button"
+                                     onclick="PF('policyDialog').hide()" />
+                </h:form>
+            </p:dialog>
+
         </div>
-        
     </ui:define>
 </ui:composition>

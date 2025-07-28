@@ -87,8 +87,8 @@ public class MenuBean implements Serializable {
                             new MenuNode("Company Information", "pi pi-users", "/insurance/company_customer", null),
                             new MenuNode("Indvidual Information", "pi pi-id-card", "/insurance/individual_customer", null),
                             new MenuNode("Indvidual Company", "pi pi-id-card", "/setting/company_information", null),
-                            new MenuNode("Indvidual Policy", "pi pi-id-card", "/setting/company_information", null),
-                            new MenuNode("Create Policy", "pi pi-id-card", "/insurance/calculator", null),
+                            new MenuNode("Indvidual Policy", "pi pi-id-card", "/insurance/individual_policy", null),
+                            new MenuNode("Create Policy", "pi pi-id-card", "/insurance/individual_policy", null),
                             new MenuNode("Pending Policy", "pi pi-id-card", "/setting/company_information", null),
                              new MenuNode("Policy Sticker", "pi pi-id-card", "/setting/company_information", null)
                     ))

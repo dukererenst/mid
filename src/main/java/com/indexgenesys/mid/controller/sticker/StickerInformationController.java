@@ -165,6 +165,8 @@ public class StickerInformationController implements Serializable, MidMethods {
 
     }
     
+   
+    
     public void viewQRCode(StickerInformation sticker) {
     try {
         // Set issued & expiry date

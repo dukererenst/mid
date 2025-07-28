@@ -16,36 +16,36 @@
                     <h:form id="customerTableForm" prependId="false">
                         <p:growl id="msgs" showDetail="true" life="5000" />
 
-                      
-                           <div class="grid mb-3">
-                                <div class="col-12 md:col-8">
-                                    <div class="grid mb-3">
-                                        <div class="col-12 md:col-4">
-                                            <p:selectOneMenu id="searchBy" style="width: 100%;">
-                                                <f:selectItem itemLabel="SELECT ONE" itemValue="#{null}" />
-                                            </p:selectOneMenu>
-                                        </div>
-                                        <div class="col-12 md:col-4">
-                                            <p:inputText placeholder="Search Value" style="width: 100%;"/>
-                                        </div>
-                                        <div class="col-12 md:col-2 flex align-items-end">
-                                            <p:commandButton value="Search"
-                                                             action="#{stickerInformationController.findAll}"
-                                                             ajax="false"
-                                                             icon="pi pi-search"
-                                                             styleClass="p-button-sm w-full" />
-                                        </div>
-                                        <div class="col-12 md:col-2 flex align-items-end">
-                                            <p:commandButton value="New Company" icon="pi pi-plus"
-                                                             styleClass="ui-button-success"
-                                                             action="#{companyCustomerController.prepareNewCustomer}"
-                                                             update=":customerDialogForm"
-                                                             oncomplete="PF('companyDialog').show()" />
-                                        </div>
+
+                        <div class="grid mb-3">
+                            <div class="col-12 md:col-8">
+                                <div class="grid mb-3">
+                                    <div class="col-12 md:col-4">
+                                        <p:selectOneMenu id="searchBy" style="width: 100%;">
+                                            <f:selectItem itemLabel="SELECT ONE" itemValue="#{null}" />
+                                        </p:selectOneMenu>
+                                    </div>
+                                    <div class="col-12 md:col-4">
+                                        <p:inputText placeholder="Search Value" style="width: 100%;"/>
+                                    </div>
+                                    <div class="col-12 md:col-2 flex align-items-end">
+                                        <p:commandButton value="Search"
+                                                         action="#{stickerInformationController.findAll}"
+                                                         ajax="false"
+                                                         icon="pi pi-search"
+                                                         styleClass="p-button-sm w-full" />
+                                    </div>
+                                    <div class="col-12 md:col-2 flex align-items-end">
+                                        <p:commandButton value="New Company" icon="pi pi-plus"
+                                                         styleClass="ui-button-success"
+                                                         action="#{companyCustomerController.prepareNewCustomer}"
+                                                         update=":customerDialogForm"
+                                                         oncomplete="PF('companyDialog').show()" />
                                     </div>
                                 </div>
                             </div>
-                      
+                        </div>
+
 
                         <!-- Customer Table -->
                         <p:dataTable id="customerTable"
@@ -59,19 +59,19 @@
                                      rows="10"
                                      emptyMessage="No customers found."
                                      filteredValue="#{individualCustomerController.filteredCustomers}"
-                                    >
+                                     >
 
                             <p:column headerText="First Name" filterBy="#{customer.firstName}" filterMatchMode="contains">
-#{customer.firstName}
+                                #{customer.firstName}
                             </p:column>
                             <p:column headerText="Last Name" filterBy="#{customer.lastName}" filterMatchMode="contains">
-#{customer.lastName}
+                                #{customer.lastName}
                             </p:column>
                             <p:column headerText="Email" filterBy="#{customer.emailAddress}" filterMatchMode="contains">
-#{customer.emailAddress}
+                                #{customer.emailAddress}
                             </p:column>
                             <p:column headerText="Primary Phone" filterBy="#{customer.primaryTelephone}">
-#{customer.primaryTelephone}
+                                #{customer.primaryTelephone}
                             </p:column>
                             <p:column headerText="Status">
                                 <p:tag value="#{customer.status ? 'Active' : 'Inactive'}"
